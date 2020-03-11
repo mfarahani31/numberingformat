@@ -23,6 +23,7 @@ public class NumberingFormatService {
     }
 
     public Optional<NumberFormat> findById(Long id) {
+
         return this.numberingFormatRepository.findById(id);
     }
 }

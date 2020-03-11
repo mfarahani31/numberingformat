@@ -1,6 +1,7 @@
 package com.gam.phoenix.numberingformat.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "TB_NFM_NUMBERING_FORMAT")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class NumberFormat implements Serializable {
+public class NumberingFormat implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -32,12 +33,13 @@ public class NumberFormat implements Serializable {
     @Size(max = 400)
     private String numberFormat;
 
-    @Column(name = "START_AT", unique = true)
+    @Column(name = "START_AT")
     @Size(max = 12)
     private Long startAt;
 
-    @Column(name = "LAST_ALLOCATED_SERIAL", unique = true)
+    @Column(name = "LAST_ALLOCATED_SERIAL")
     @Size(max = 12)
+    @JsonIgnore
     private Long lastAllocatedSerial;
 
     @Column(name = "CREATED_BY", updatable = false)

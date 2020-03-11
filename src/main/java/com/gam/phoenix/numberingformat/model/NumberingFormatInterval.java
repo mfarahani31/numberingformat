@@ -8,7 +8,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,10 +19,10 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "TB_NFM_RESERVED_NUMBER_INTERVAL")
+//@Entity
+//@Table(name = "TB_NFM_RESERVED_NUMBER_INTERVAL")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class NumberFormatInterval implements Serializable {
+public class NumberingFormatInterval implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

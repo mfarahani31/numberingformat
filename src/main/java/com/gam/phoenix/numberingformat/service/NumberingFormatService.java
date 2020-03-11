@@ -1,6 +1,6 @@
 package com.gam.phoenix.numberingformat.service;
 
-import com.gam.phoenix.numberingformat.model.NumberFormat;
+import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,15 @@ public class NumberingFormatService {
         this.numberingFormatRepository = numberingFormatRepository;
     }
 
-    public List<NumberFormat> findAllNumberFormat() {
-        return numberingFormatRepository.findAll();
+    public NumberingFormat saveNumberFormat(NumberingFormat numberFormat) {
+        return this.numberingFormatRepository.save(numberFormat);
     }
 
-    public Optional<NumberFormat> findById(Long id) {
-
+    public Optional<NumberingFormat> findById(Long id) {
         return this.numberingFormatRepository.findById(id);
+    }
+
+    public List<NumberingFormat> findAllNumberFormats() {
+        return this.numberingFormatRepository.findAll();
     }
 }

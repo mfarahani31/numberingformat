@@ -1,5 +1,6 @@
 package com.gam.phoenix.numberingformat.controller;
 
+import com.gam.phoenix.numberingformat.exp.BusinessException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/numbering-format/api/v1/numbering-formats")
@@ -22,7 +22,7 @@ public class NumberingFormatController {
     }
 
     @PostMapping
-    public ResponseEntity<NumberingFormat> newNumberFormat(@Valid @RequestBody NumberingFormat numberingFormat) {
+    public ResponseEntity<NumberingFormat> newNumberFormat(@Valid @RequestBody NumberingFormat numberingFormat) throws BusinessException {
         this.numberingFormatService.saveNumberFormat(numberingFormat);
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormat);
     }
@@ -32,9 +32,37 @@ public class NumberingFormatController {
         return ResponseEntity.ok(numberingFormatService.findAllNumberFormats());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<NumberingFormat>> getNumberFormatById(@PathVariable Long id) {
-        Optional<NumberingFormat> optionalNumberFormat = numberingFormatService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(optionalNumberFormat);
+    @GetMapping("/{usage}/{format}")
+    public ResponseEntity<NumberingFormat> getNumberFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
+        NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat);
     }
+
+    @GetMapping("/{usage}/{format}/current")
+    public ResponseEntity<Long> getCurrentSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
+        NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial());
+    }
+
+    @GetMapping("/{usage}/{format}/next")
+    public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
+        NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
+        numberingFormat.setLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1);
+        //this.numberingFormatService
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial() + 1);
+    }
+
+    @PatchMapping("/{usage}/{format}/serial/increase")
+    public ResponseEntity<Long> increaseSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
+        NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial() + 1);
+    }
+
+    @DeleteMapping("/{usage}/{format}")
+    public ResponseEntity deleteNumberFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
+        this.numberingFormatService.deleteNumberingFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
 }

@@ -6,6 +6,7 @@ import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
@@ -46,5 +47,10 @@ public class NumberingFormatService {
         } catch (HttpServerErrorException e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public long getLastAllocatedSerial() {
+        return numberingFormatRepository.count();
     }
 }

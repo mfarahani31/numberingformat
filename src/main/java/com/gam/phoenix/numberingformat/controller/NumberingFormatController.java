@@ -23,6 +23,7 @@ public class NumberingFormatController {
 
     @PostMapping
     public ResponseEntity<NumberingFormat> newNumberFormat(@Valid @RequestBody NumberingFormat numberingFormat) throws BusinessException {
+        numberingFormat.setLastAllocatedSerial(numberingFormat.getStartAt() - 1);
         this.numberingFormatService.saveNumberFormat(numberingFormat);
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormat);
     }
@@ -47,8 +48,6 @@ public class NumberingFormatController {
     @GetMapping("/{usage}/{format}/next")
     public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
         NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
-        numberingFormat.setLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1);
-        //this.numberingFormatService
         return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial() + 1);
     }
 

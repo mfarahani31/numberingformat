@@ -1,4 +1,4 @@
-package com.gam.phoenix.numberingformat.exp;
+package com.gam.phoenix.numberingformat.exception;
 
 
 public class BusinessException extends ServiceException {

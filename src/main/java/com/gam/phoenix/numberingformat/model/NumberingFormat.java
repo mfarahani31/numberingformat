@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -33,12 +34,11 @@ public class NumberingFormat implements Serializable {
     @Size(max = 400)
     private String numberFormat;
 
-    @Column(name = "START_AT")
-    @Size(max = 12)
+    @Column(name = "START_AT", length = 12)
+    @Min(1L)
     private Long startAt;
 
-    @Column(name = "LAST_ALLOCATED_SERIAL")
-    @Size(max = 12)
+    @Column(name = "LAST_ALLOCATED_SERIAL", length = 12)
     @JsonIgnore
     private Long lastAllocatedSerial;
 

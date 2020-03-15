@@ -1,6 +1,6 @@
 package com.gam.phoenix.numberingformat.controller;
 
-import com.gam.phoenix.numberingformat.exp.BusinessException;
+import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +54,7 @@ public class NumberingFormatController {
     @PatchMapping("/{usage}/{format}/serial/increase")
     public ResponseEntity<Long> increaseSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
         NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
+        numberingFormatService.increaseLastAllocatedSerialByOne(usage, format);
         return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial() + 1);
     }
 

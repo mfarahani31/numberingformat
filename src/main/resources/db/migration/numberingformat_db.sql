@@ -9,7 +9,7 @@ create table tb_nfm_numbering_format
     last_modified_date    timestamp,
     numbering_format      varchar2(400 char),
     numbering_usage       varchar2(50 char),
-    start_at              number(19, 0),
+    start_at              number(19, 0) check (start_at >= 1),
     primary key (id)
 );
 alter table tb_nfm_numbering_format

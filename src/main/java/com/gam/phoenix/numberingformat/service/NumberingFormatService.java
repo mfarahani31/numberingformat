@@ -1,12 +1,11 @@
 package com.gam.phoenix.numberingformat.service;
 
 import com.gam.phoenix.numberingformat.constants.ErrorMessages;
-import com.gam.phoenix.numberingformat.exp.BusinessException;
+import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class NumberingFormatService {
 
     public NumberingFormat findByUsageAndFormat(String usage, String format) throws BusinessException {
         try {
-            return this.numberingFormatRepository.findNumberingFormatsByNumberUsageAndNumberFormatIsLike(usage, format);
+            return this.numberingFormatRepository.findNumberingFormatsByNumberUsageAndNumberFormat(usage, format);
         } catch (HttpServerErrorException e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
@@ -49,8 +48,11 @@ public class NumberingFormatService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public long getLastAllocatedSerial() {
-        return numberingFormatRepository.count();
+    public void increaseLastAllocatedSerialByOne(String usage, String format) throws BusinessException {
+        try {
+            this.numberingFormatRepository.increaseLastAllocatedSerialByOne(usage, format);
+        } catch (HttpServerErrorException e) {
+            throw new BusinessException(ErrorMessages.NOT_EXIST);
+        }
     }
 }

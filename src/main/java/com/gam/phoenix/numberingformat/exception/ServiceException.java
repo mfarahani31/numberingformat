@@ -1,4 +1,4 @@
-package com.gam.phoenix.numberingformat.exp;
+package com.gam.phoenix.numberingformat.exception;
 
 public class ServiceException extends Exception {
     private static final long serialVersionUID = 5270039361418646509L;
@@ -44,12 +44,12 @@ public class ServiceException extends Exception {
         return this.args;
     }
 
-    public String getExceptionCode() {
-        return this.exceptionCode;
-    }
-
     protected void setArgs(Object[] args) {
         this.args = args;
+    }
+
+    public String getExceptionCode() {
+        return this.exceptionCode;
     }
 
     protected void setExceptionCode(String exceptionCode) {

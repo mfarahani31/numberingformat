@@ -22,14 +22,14 @@ public class NumberingFormatController {
     }
 
     @PostMapping
-    public ResponseEntity<NumberingFormat> newNumberFormat(@Valid @RequestBody NumberingFormat numberingFormat) throws BusinessException {
+    public ResponseEntity<NumberingFormat> saveNumberFormat(@Valid @RequestBody NumberingFormat numberingFormat) throws BusinessException {
         numberingFormat.setLastAllocatedSerial(numberingFormat.getStartAt() - 1);
         this.numberingFormatService.saveNumberFormat(numberingFormat);
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormat);
     }
 
     @GetMapping
-    public ResponseEntity<List<NumberingFormat>> all() {
+    public ResponseEntity<List<NumberingFormat>> getAllNumberingFormat() {
         return ResponseEntity.ok(numberingFormatService.findAllNumberFormats());
     }
 

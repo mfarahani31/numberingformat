@@ -1,7 +1,6 @@
 package com.gam.phoenix.numberingformat.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +10,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -21,25 +21,32 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "TB_NFM_NUMBERING_FORMAT")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@IdClass(UsageAndFormatColumn.class)
 public class NumberingFormat implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "NUMBERING_USAGE", unique = true)
-    @Size(max = 50)
+
+    //    @Column(name = "NUMBERING_USAGE")
+//    @Size(max = 50)
+//    @NotNull
+    @Id
     private String numberUsage;
 
-    @Column(name = "NUMBERING_FORMAT", unique = true)
-    @Size(max = 400)
+
+    //    @Column(name = "NUMBERING_FORMAT")
+//    @Size(max = 400)
+//    @NotNull
+    @Id
     private String numberFormat;
 
     @Column(name = "START_AT", length = 12)
     @Min(1L)
+    @NotNull
     private Long startAt;
 
     @Column(name = "LAST_ALLOCATED_SERIAL", length = 12)
-    @JsonIgnore
     private Long lastAllocatedSerial;
 
     @Column(name = "CREATED_BY", updatable = false)
@@ -48,7 +55,7 @@ public class NumberingFormat implements Serializable {
 
     @Column(name = "CREATED_DATE", updatable = false)
     @CreationTimestamp
-    private LocalDateTime createdDate;
+    private Date createdDate;
 
     @Column(name = "LAST_MODIFIED_BY")
     @Size(max = 200)
@@ -56,5 +63,5 @@ public class NumberingFormat implements Serializable {
 
     @Column(name = "LAST_MODIFIED_DATE")
     @UpdateTimestamp
-    private LocalDateTime lastModifiedDate;
+    private Date lastModifiedDate;
 }

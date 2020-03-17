@@ -44,7 +44,7 @@ public class NumberingFormatService {
 
     public void deleteNumberingFormat(String usage, String format) throws BusinessException {
         try {
-            this.numberingFormatRepository.deleteByNumberUsageAndNumberFormat(usage, format);
+            this.numberingFormatRepository.deleteNumberingFormatByNumberUsageAndNumberFormat(usage, format);
         } catch (Exception e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
@@ -54,7 +54,7 @@ public class NumberingFormatService {
         try {
             NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
             numberingFormat.setLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1);
-            return numberingFormatRepository.increaseLastAllocatedSerialByOne(numberingFormat, usage, format);
+            return numberingFormatRepository.save(numberingFormat);
         } catch (HttpServerErrorException e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }

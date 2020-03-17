@@ -8,10 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,8 +17,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Entity
-//@Table(name = "TB_NFM_RESERVED_NUMBER_INTERVAL")
+@Entity
+@Table(name = "TB_NFM_RESERVED_NUMBER_INTERVAL")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class NumberingFormatInterval implements Serializable {
 
@@ -28,12 +26,15 @@ public class NumberingFormatInterval implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "NUMBERING_USAGE", unique = true)
+    @Column(name = "NUMBERING_USAGE")
     @Size(max = 50)
+    @NotNull
     private String numberUsage;
 
-    @Column(name = "NUMBERING_FORMAT", unique = true)
+
+    @Column(name = "NUMBERING_FORMAT")
     @Size(max = 400)
+    @NotNull
     private String numberFormat;
 
     @Column(name = "RESERVED_START")

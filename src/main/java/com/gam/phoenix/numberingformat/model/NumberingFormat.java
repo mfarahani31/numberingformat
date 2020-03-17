@@ -19,26 +19,22 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "TB_NFM_NUMBERING_FORMAT")
+@Table(name = "TB_NFM_NUMBERING_FORMAT", uniqueConstraints = {@UniqueConstraint(columnNames = {"NUMBERING_USAGE", "NUMBERING_FORMAT"})})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@IdClass(UsageAndFormatColumn.class)
 public class NumberingFormat implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
-    //    @Column(name = "NUMBERING_USAGE")
-//    @Size(max = 50)
-//    @NotNull
-    @Id
+    @Column(name = "NUMBERING_USAGE")
+    @Size(max = 50)
+    @NotNull
     private String numberUsage;
 
 
-    //    @Column(name = "NUMBERING_FORMAT")
-//    @Size(max = 400)
-//    @NotNull
-    @Id
+    @Column(name = "NUMBERING_FORMAT")
+    @Size(max = 400)
+    @NotNull
     private String numberFormat;
 
     @Column(name = "START_AT", length = 12)

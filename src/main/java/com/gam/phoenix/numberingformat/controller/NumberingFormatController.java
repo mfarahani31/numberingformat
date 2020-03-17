@@ -14,8 +14,10 @@ import java.util.List;
 
 @RestController
 @Api(value = "NumberingFormat Service!!!")
-@RequestMapping("/numbering-format/api/v1/numbering-formats")
+@RequestMapping(NumberingFormatController.NUMBERING_FORMAT_URL)
 public class NumberingFormatController {
+    public static final String NUMBERING_FORMAT_URL = "/numbering-format/api/v1/numbering-formats";
+
     private NumberingFormatService numberingFormatService;
 
     @Autowired

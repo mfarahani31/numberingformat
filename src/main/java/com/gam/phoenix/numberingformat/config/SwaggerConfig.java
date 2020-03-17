@@ -29,7 +29,7 @@ public class SwaggerConfig {
 
         return new ApiInfoBuilder().title("Numbering-Format Service")
                 .description("Numbering-Format Service")
-                .version("0.1.2")
+                .version("0.1.3")
                 .build();
     }
 }

@@ -12,20 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 public interface NumberingFormatRepository extends JpaRepository<NumberingFormat, Long> {
 
 
-    @Query("SELECT n FROM NumberingFormat n WHERE n.numberFormat = :format and n.numberUsage = :usage")
-    NumberingFormat findNumberingFormatsByNumberUsageAndNumberFormat(@Param("usage") String usage,
-                                                                     @Param("format") String format);
-
+    NumberingFormat findByNumberUsageAndNumberFormat(@Param("usage") String usage,
+                                                     @Param("format") String format);
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM NumberingFormat n WHERE n.numberFormat = :format and n.numberUsage = :usage")
-    void deleteNumberingFormatByNumberUsageAndNumberFormat(@Param("usage") String usage,
-                                                           @Param("format") String format);
-
+    void deleteByNumberUsageAndNumberFormat(@Param("usage") String usage,
+                                            @Param("format") String format);
 
     @Modifying
-    @Query("UPDATE NumberingFormat n SET n.lastAllocatedSerial = n.lastAllocatedSerial+1 WHERE n.numberFormat = :format and n.numberUsage = :usage")
-    void increaseLastAllocatedSerialByOne(@Param("usage") String usage,
-                                          @Param("format") String format);
+    @Query("UPDATE NumberingFormat n SET n = :numberingFormat WHERE n.numberFormat = :format and n.numberUsage = :usage")
+    NumberingFormat increaseLastAllocatedSerialByOne(@Param("numberingFormat") NumberingFormat numberingFormat,
+                                                     @Param("usage") String usage,
+                                                     @Param("format") String format);
 }

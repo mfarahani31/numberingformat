@@ -22,6 +22,7 @@ public class NumberingFormatService {
 
     public NumberingFormat saveNumberFormat(NumberingFormat numberFormat) throws BusinessException {
         try {
+            numberFormat.setLastAllocatedSerial(decreaseStartAtByOneForLastAllocatedSerial(numberFormat.getStartAt()));
             return this.numberingFormatRepository.save(numberFormat);
         } catch (HttpServerErrorException e) {
             throw new BusinessException(ErrorMessages.DUPLICATE_NUMBERFORMAT);
@@ -30,11 +31,12 @@ public class NumberingFormatService {
 
     public NumberingFormat findByUsageAndFormat(String usage, String format) throws BusinessException {
         try {
-            return this.numberingFormatRepository.findNumberingFormatsByNumberUsageAndNumberFormat(usage, format);
-        } catch (HttpServerErrorException e) {
+            return this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
+        } catch (Exception e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
     }
+
 
     public List<NumberingFormat> findAllNumberFormats() {
         return this.numberingFormatRepository.findAll();
@@ -42,17 +44,27 @@ public class NumberingFormatService {
 
     public void deleteNumberingFormat(String usage, String format) throws BusinessException {
         try {
-            this.numberingFormatRepository.deleteNumberingFormatByNumberUsageAndNumberFormat(usage, format);
+            this.numberingFormatRepository.deleteByNumberUsageAndNumberFormat(usage, format);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorMessages.NOT_EXIST);
+        }
+    }
+
+    public NumberingFormat increaseLastAllocatedSerialByOne(String usage, String format) throws BusinessException {
+        try {
+            NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
+            numberingFormat.setLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1);
+            return numberingFormatRepository.increaseLastAllocatedSerialByOne(numberingFormat, usage, format);
         } catch (HttpServerErrorException e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
     }
 
-    public void increaseLastAllocatedSerialByOne(String usage, String format) throws BusinessException {
-        try {
-            this.numberingFormatRepository.increaseLastAllocatedSerialByOne(usage, format);
-        } catch (HttpServerErrorException e) {
-            throw new BusinessException(ErrorMessages.NOT_EXIST);
-        }
+    public Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
+        return startAt - 1;
+    }
+
+    public Long getNextAllocatedSerial(NumberingFormat numberingFormat) {
+        return numberingFormat.getLastAllocatedSerial() + 1;
     }
 }

@@ -23,13 +23,12 @@ public class NumberingFormatController {
 
     @PostMapping
     public ResponseEntity<NumberingFormat> saveNumberFormat(@Valid @RequestBody NumberingFormat numberingFormat) throws BusinessException {
-        numberingFormat.setLastAllocatedSerial(numberingFormat.getStartAt() - 1);
         this.numberingFormatService.saveNumberFormat(numberingFormat);
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormat);
     }
 
     @GetMapping
-    public ResponseEntity<List<NumberingFormat>> getAllNumberingFormat() {
+    public ResponseEntity<List<NumberingFormat>> getAllNumberingFormats() {
         return ResponseEntity.ok(numberingFormatService.findAllNumberFormats());
     }
 
@@ -48,14 +47,13 @@ public class NumberingFormatController {
     @GetMapping("/{usage}/{format}/next")
     public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
         NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial() + 1);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextAllocatedSerial(numberingFormat));
     }
 
     @PatchMapping("/{usage}/{format}/serial/increase")
     public ResponseEntity<Long> increaseSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
-        numberingFormatService.increaseLastAllocatedSerialByOne(usage, format);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial() + 1);
+        NumberingFormat numberingFormat = numberingFormatService.increaseLastAllocatedSerialByOne(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial());
     }
 
     @DeleteMapping("/{usage}/{format}")

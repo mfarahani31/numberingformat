@@ -3,6 +3,7 @@ package com.gam.phoenix.numberingformat.controller;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Api(value = "NumberingFormat Service!!!")
 @RequestMapping("/numbering-format/api/v1/numbering-formats")
 public class NumberingFormatController {
     private NumberingFormatService numberingFormatService;

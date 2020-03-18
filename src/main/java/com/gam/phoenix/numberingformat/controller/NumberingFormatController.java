@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Api(value = "NumberingFormat Service!!!")
@@ -38,20 +39,20 @@ public class NumberingFormatController {
 
     @GetMapping("/{usage}/{format}")
     public ResponseEntity<NumberingFormat> getNumberFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat);
+        Optional<NumberingFormat> numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.get());
     }
 
     @GetMapping("/{usage}/{format}/current")
     public ResponseEntity<Long> getCurrentSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial());
+        Optional<NumberingFormat> numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.get().getLastAllocatedSerial());
     }
 
     @GetMapping("/{usage}/{format}/next")
     public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextAllocatedSerial(numberingFormat));
+        Optional<NumberingFormat> numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextAllocatedSerial(numberingFormat.get()));
     }
 
     @PatchMapping("/{usage}/{format}/serial/increase")

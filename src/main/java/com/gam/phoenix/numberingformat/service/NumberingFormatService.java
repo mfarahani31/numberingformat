@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NumberingFormatService {
@@ -29,9 +30,9 @@ public class NumberingFormatService {
         }
     }
 
-    public NumberingFormat findByUsageAndFormat(String usage, String format) throws BusinessException {
+    public Optional<NumberingFormat> findByUsageAndFormat(String usage, String format) throws BusinessException {
         try {
-            return this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
+            return Optional.of(this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format));
         } catch (Exception e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }

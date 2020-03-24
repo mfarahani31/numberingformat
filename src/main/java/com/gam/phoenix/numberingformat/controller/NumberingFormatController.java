@@ -39,19 +39,19 @@ public class NumberingFormatController {
 
     @GetMapping("/{usage}/{format}")
     public ResponseEntity<NumberingFormat> getNumberFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
+        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException("not exist!")));
         return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.get());
     }
 
     @GetMapping("/{usage}/{format}/current")
     public ResponseEntity<Long> getCurrentSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
+        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException("not exist!")));
         return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.get().getLastAllocatedSerial());
     }
 
     @GetMapping("/{usage}/{format}/next")
     public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = numberingFormatService.findByUsageAndFormat(usage, format);
+        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException("not exist!")));
         return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextAllocatedSerial(numberingFormat.get()));
     }
 

@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class NumberingFormatApplicationTests {
+class NumberingFormatApplicationTest {
 
     @MockBean
     NumberingFormatService numberingFormatService;

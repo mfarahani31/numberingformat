@@ -156,9 +156,9 @@
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <argLine>${surefireArgLine}</argLine>
-                        <environmentVariables>
-                            <SPRING_PROFILES_ACTIVE>test</SPRING_PROFILES_ACTIVE>
-                        </environmentVariables>
+                        <!--                        <environmentVariables>-->
+                        <!--                            <SPRING_PROFILES_ACTIVE>test</SPRING_PROFILES_ACTIVE>-->
+                        <!--                        </environmentVariables>-->
                         <includes>
                             <include>**/*Test</include>
                             <!--                            <include>**/*IT</include>-->

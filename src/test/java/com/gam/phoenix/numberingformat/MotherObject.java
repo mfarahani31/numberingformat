@@ -10,9 +10,9 @@ public class MotherObject {
         Date date = new Date();
         return new NumberingFormat(1L,
                 "test1",
-                "test2",
+                "test1",
                 300L,
-                299L,
+                301L,
                 "admin",
                 date,
                 "admin",

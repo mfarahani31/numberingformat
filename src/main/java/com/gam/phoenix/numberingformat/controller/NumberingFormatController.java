@@ -1,5 +1,6 @@
 package com.gam.phoenix.numberingformat.controller;
 
+import com.gam.phoenix.numberingformat.constants.ErrorMessages;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
@@ -39,19 +40,19 @@ public class NumberingFormatController {
 
     @GetMapping("/{usage}/{format}")
     public ResponseEntity<NumberingFormat> getNumberFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException("not exist!")));
+        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)));
         return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.get());
     }
 
     @GetMapping("/{usage}/{format}/current")
     public ResponseEntity<Long> getCurrentSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException("not exist!")));
+        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)));
         return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.get().getLastAllocatedSerial());
     }
 
     @GetMapping("/{usage}/{format}/next")
     public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException("not exist!")));
+        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)));
         return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextAllocatedSerial(numberingFormat.get()));
     }
 

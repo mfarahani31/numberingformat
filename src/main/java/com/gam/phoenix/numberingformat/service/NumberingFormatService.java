@@ -39,8 +39,13 @@ public class NumberingFormatService {
     }
 
 
-    public List<NumberingFormat> findAllNumberFormats() {
-        return this.numberingFormatRepository.findAll();
+    public List<NumberingFormat> findAllNumberFormats() throws BusinessException {
+        try {
+            return this.numberingFormatRepository.findAll();
+        } catch (Exception e) {
+            throw new BusinessException(ErrorMessages.NOT_EXIST);
+        }
+
     }
 
     public void deleteNumberingFormat(String usage, String format) throws BusinessException {

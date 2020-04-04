@@ -18,4 +18,8 @@ public class MotherObject {
                 "admin",
                 date);
     }
+
+    public static Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
+        return startAt - 1;
+    }
 }

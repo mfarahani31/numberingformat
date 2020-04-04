@@ -6,6 +6,7 @@ import com.gam.phoenix.numberingformat.controller.NumberingFormatController;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
+import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
@@ -38,6 +38,13 @@ class NumberingFormatApplicationTest {
     NumberingFormatService numberingFormatService;
     @Autowired
     private TestRestTemplate restTemplate;
+
+    HttpEntity<String> entity = new HttpEntity<>(null);
+
+    @Before
+    public void setup() {
+        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+    }
 
     @Test
     void contextLoad() {
@@ -88,20 +95,20 @@ class NumberingFormatApplicationTest {
         verify(numberingFormatService, times(1)).findByUsageAndFormat(anyString(), anyString());
     }
 
-//    @Test
-//    @DisplayName("given getNextSerial when usage and format are valid then return next Serial")
-//    public void given_getNextSerial_when_usage_and_format_are_valid_then_return_nextSerial() throws BusinessException {
-//
-//        //doReturn(Optional.of(MotherObject.getAnyValidNumberingFormat())).when(numberingFormatService).findByUsageAndFormat("test1", "test1");
-//        doReturn(anyLong()).when(numberingFormatService).getNextAllocatedSerial(any());
-//
-//        ResponseEntity<Long> response = restTemplate.getForEntity(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/next", Long.class);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//
+    @Test
+    @DisplayName("given getNextSerial when usage and format are valid then return next Serial")
+    public void given_getNextSerial_when_usage_and_format_are_valid_then_return_nextSerial() throws BusinessException {
+
+        doReturn(Optional.of(MotherObject.getAnyValidNumberingFormat())).when(numberingFormatService).findByUsageAndFormat("test1", "test1");
+        doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextAllocatedSerial(MotherObject.getAnyValidNumberingFormat());
+
+        ResponseEntity<Long> response = restTemplate.getForEntity(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/next", Long.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
 //        assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial(), response.getBody());
-//        verify(numberingFormatService, times(1)).findByUsageAndFormat(anyString(), anyString());
-//    }
+        verify(numberingFormatService, times(1)).findByUsageAndFormat(anyString(), anyString());
+    }
 
     @Test
     @DisplayName("given saveNumberFormat when numberingFormat is valid then return numberingFormat")
@@ -118,4 +125,53 @@ class NumberingFormatApplicationTest {
         verify(numberingFormatService, times(1)).saveNumberFormat(any(NumberingFormat.class));
     }
 
+    @Test
+    @DisplayName("given increaseSerial when usage and format are valid then return nextValidSerial")
+    public void given_increaseSerial_when_usage_and_format_are_valid_then_return_nextValidSerial() throws BusinessException {
+
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).increaseLastAllocatedSerialByOne("test1", "test1");
+
+        ResponseEntity<Long> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/serial/increase", HttpMethod.PATCH, entity, Long.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial(), response.getBody());
+        verify(numberingFormatService, times(1)).increaseLastAllocatedSerialByOne(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("given deleteNumberFormat when usage and format are valid then delete numbering format")
+    public void given_deleteNumberFormat_when_usage_and_format_are_valid_then_delete_numbering_format() throws BusinessException {
+
+        doNothing().when(numberingFormatService).deleteNumberingFormat("test1", "test1");
+
+        ResponseEntity responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1", HttpMethod.DELETE, entity, ResponseEntity.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+
+        verify(numberingFormatService, times(1)).deleteNumberingFormat(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("given getNumberingFormatByFormatAndUsage when numberingFormat not exist then return error")
+    public void given_getNumberingFormatByFormatAndUsage_when_numberingFormat_not_exist_then_return_error() throws BusinessException {
+        doThrow(BusinessException.class).when(numberingFormatService).findByUsageAndFormat("test1", "test888");
+
+        ResponseEntity<NumberingFormat> response = restTemplate.getForEntity(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test888", NumberingFormat.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
+
+        //assertEquals(MotherObject.getAnyValidNumberingFormat().getClass(), Objects.requireNonNull(response.getBody()).getClass());
+        verify(numberingFormatService, times(1)).findByUsageAndFormat(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("given deleteNumberFormat when numberingFormat not exist then return error")
+    public void given_deleteNumberFormat_when_numberingFormat_not_exist_then_return_error() throws BusinessException {
+        doThrow(BusinessException.class).when(numberingFormatService).deleteNumberingFormat("test1", "test888");
+
+        restTemplate.delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test888");
+        verify(numberingFormatService, times(1)).deleteNumberingFormat(anyString(), anyString());
+    }
 }

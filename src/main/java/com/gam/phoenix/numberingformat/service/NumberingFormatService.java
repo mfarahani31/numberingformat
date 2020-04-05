@@ -61,7 +61,7 @@ public class NumberingFormatService {
             NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
             numberingFormat.setLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1);
             return numberingFormatRepository.save(numberingFormat);
-        } catch (HttpServerErrorException e) {
+        } catch (Exception e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
     }

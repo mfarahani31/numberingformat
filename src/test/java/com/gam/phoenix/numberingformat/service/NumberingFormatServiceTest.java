@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpServerErrorException;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ class NumberingFormatServiceTest {
     public void given_findByUsageAndFormat_when_usage_and_format_are_valid_then_returns_numberingFormat() throws BusinessException {
 
         //given
-        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).findByNumberUsageAndNumberFormat("test1", "test1");
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
 
         //when
         Optional<NumberingFormat> numberingFormatOptional = numberingFormatService.findByUsageAndFormat("test1", "test1");
@@ -54,7 +54,7 @@ class NumberingFormatServiceTest {
     @Test
     @DisplayName("given findByNumberUsageAndNumberFormat when usage and format are invalid then throws exception")
     public void given_findByNumberUsageAndNumberFormat_when_usage_and_format_are_invalid_then_throws_exception() {
-        doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).findByNumberUsageAndNumberFormat("invalidUsage", "invalidFormat");
+        doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
         assertThrows(BusinessException.class, () -> numberingFormatService.findByUsageAndFormat("invalidUsage", "invalidFormat"));
     }
 
@@ -71,7 +71,7 @@ class NumberingFormatServiceTest {
 
     @Test
     @DisplayName("given saveNumberFormat when numberingFormat is not valid then return error")
-    public void given_saveNumberFormat_when_numberingFormat_is_not_valid_then_return_error() throws BusinessException {
+    public void given_saveNumberFormat_when_numberingFormat_is_not_valid_then_return_error() {
         doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).save(any(NumberingFormat.class));
         assertThrows(BusinessException.class, () -> numberingFormatService.saveNumberFormat(MotherObject.getAnyValidNumberingFormat()));
     }
@@ -80,7 +80,7 @@ class NumberingFormatServiceTest {
     @DisplayName("given findAllNumberingFormats when numberingFormat exist then returns numberingFormats")
     public void given_findAllNumberingFormats_when_numberingFormat_exist_then_returns_numberingFormat() throws BusinessException {
         //given
-        List<NumberingFormat> expectedNumberingFormats = Arrays.asList(MotherObject.getAnyValidNumberingFormat());
+        List<NumberingFormat> expectedNumberingFormats = Collections.singletonList(MotherObject.getAnyValidNumberingFormat());
         doReturn(expectedNumberingFormats).when(numberingFormatRepository).findAll();
         // when
         List<NumberingFormat> actualNumberingFormats = numberingFormatService.findAllNumberFormats();
@@ -105,8 +105,39 @@ class NumberingFormatServiceTest {
 
     @Test
     @DisplayName("given deleteNumberingFormat when usage and format are invalid then throws exception")
-    public void given_deleteNumberingFormat_when_usage_and_format_are_invalid_then_throws_exception() throws BusinessException {
+    public void given_deleteNumberingFormat_when_usage_and_format_are_invalid_then_throws_exception() {
         doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).deleteNumberingFormatByNumberUsageAndNumberFormat(anyString(), anyString());
         assertThrows(BusinessException.class, () -> numberingFormatService.deleteNumberingFormat(anyString(), anyString()));
+    }
+
+    @Test
+    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are valid then return numberingFormat")
+    public void given_increaseLastAllocatedSerialByOne_when_numberingFormat_usage_and_format_are_valid_then_return_numberingFormat() throws BusinessException {
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).save(any(NumberingFormat.class));
+
+
+        NumberingFormat numberFormat = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat());
+
+        assertNotNull(numberingFormatService.increaseLastAllocatedSerialByOne("test1", "test1"));
+        assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial(), numberFormat.getLastAllocatedSerial());
+    }
+
+    @Test
+    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are invalid then throws exception")
+    public void given_increaseLastAllocatedSerialByOne_when_usage_and_format_are_invalid_then_throws_exception() {
+        doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+        doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).save(any(NumberingFormat.class));
+        assertThrows(BusinessException.class, () -> numberingFormatService.increaseLastAllocatedSerialByOne(anyString(), anyString()));
+    }
+
+    @Test
+    @DisplayName("given getNextAllocatedSerial when numberingFormat is valid then return nextAllocatedSerial")
+    public void given_getNextAllocatedSerial_when_numberingFormat_is_valid_then_return_nextAllocatedSerial() {
+
+        Long nextAllocatedSerial = numberingFormatService.getNextAllocatedSerial(MotherObject.getAnyValidNumberingFormat());
+
+        assertNotNull(numberingFormatService.getNextAllocatedSerial(MotherObject.getAnyValidNumberingFormat()));
+        assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1, nextAllocatedSerial);
     }
 }

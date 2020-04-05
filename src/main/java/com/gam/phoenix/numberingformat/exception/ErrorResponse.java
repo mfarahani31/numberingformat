@@ -1,6 +1,9 @@
 package com.gam.phoenix.numberingformat.exception;
 
 
+import lombok.Getter;
+
+@Getter
 public class ErrorResponse {
 
     private String timestamp;
@@ -12,17 +15,5 @@ public class ErrorResponse {
         this.timestamp = timestamp;
         this.message = message;
         this.details = details;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getDetails() {
-        return details;
     }
 }

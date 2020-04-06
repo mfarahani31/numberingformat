@@ -9,16 +9,18 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "TB_NFM_RESERVED_NUMBER_INTERVAL")
+@CheckEndGreaterThanStart
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class NumberingFormatInterval implements Serializable {
 
@@ -37,13 +39,12 @@ public class NumberingFormatInterval implements Serializable {
     @NotNull
     private String numberFormat;
 
-    @Column(name = "RESERVED_START")
-    @Size(max = 12)
-    private Long startAt;
+    @Column(name = "RESERVED_START", length = 12)
+    @Min(1L)
+    private Long reservedStart;
 
-    @Column(name = "RESERVED_END")
-    @Size(max = 12)
-    private Long lastAllocatedSerial;
+    @Column(name = "RESERVED_END", length = 12)
+    private Long reservedEnd;
 
     @Column(name = "CREATED_BY", updatable = false)
     @Size(max = 200)
@@ -51,7 +52,7 @@ public class NumberingFormatInterval implements Serializable {
 
     @Column(name = "CREATED_DATE", updatable = false)
     @CreationTimestamp
-    private LocalDateTime createdDate;
+    private Date createdDate;
 
     @Column(name = "LAST_MODIFIED_BY")
     @Size(max = 200)
@@ -59,5 +60,5 @@ public class NumberingFormatInterval implements Serializable {
 
     @Column(name = "LAST_MODIFIED_DATE")
     @UpdateTimestamp
-    private LocalDateTime lastModifiedDate;
+    private Date lastModifiedDate;
 }

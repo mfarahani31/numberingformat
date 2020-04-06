@@ -60,7 +60,8 @@ public class NumberingFormatService {
         try {
             NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
             numberingFormat.setLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1);
-            return numberingFormatRepository.save(numberingFormat);
+            this.numberingFormatRepository.updateNumberingFormatPlusOneToLastAllocatedSerial(usage, format);
+            return numberingFormat;
         } catch (Exception e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }

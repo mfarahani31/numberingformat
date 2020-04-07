@@ -35,30 +35,30 @@ public class NumberingFormatIntervalService {
         }
     }
 
-    public List<NumberingFormatInterval> findByUsageAndFormat(String usage, String format, boolean justApplicable, Long serial) throws BusinessException {
+    public List<NumberingFormatInterval> findByNumberingFormatId(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) throws BusinessException {
         try {
-            return this.retrieveNumberingFormatInterval(usage, format, justApplicable, serial);
+            return this.retrieveNumberingFormatIntervalById(numberingFormatId, justApplicableIntervals, serial);
         } catch (Exception e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
     }
 
-    public void deleteNumberingFormatInterval(String usage, String format, Long start, Long end) throws BusinessException {
+    public void deleteNumberingFormatInterval(Long reservedIntervalId) throws BusinessException {
         try {
-            this.numberingFormatIntervalRepository.deleteNumberingFormatIntervalByNumberUsageAndNumberFormatAndReservedStartAndReservedEnd(usage, format, start, end);
+            this.numberingFormatIntervalRepository.deleteById(reservedIntervalId);
         } catch (Exception e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
     }
 
-    public List<NumberingFormatInterval> retrieveNumberingFormatInterval(String usage, String format, boolean justApplicable, Long serial) {
-        if (!justApplicable) {
-            return this.numberingFormatIntervalRepository.findAllByNumberUsageAndNumberFormat(usage, format);
+    public List<NumberingFormatInterval> retrieveNumberingFormatIntervalById(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) {
+        if (justApplicableIntervals == false || justApplicableIntervals == null) {
+            return this.numberingFormatIntervalRepository.findAllByNumberingFormatIntervalByNumberingFormatId(numberingFormatId);
         } else if (serial != null) {
-            return this.numberingFormatIntervalRepository.findAllByNumberUsageAndNumberFormatAndReservedIsGreaterThenSerial(usage, format, serial);
+            return this.numberingFormatIntervalRepository.findAllByNumberUsageAndNumberFormatAndReservedIsGreaterThenSerial(numberingFormatId, serial);
         } else {
             serial = 1L;
-            return this.numberingFormatIntervalRepository.findAllByNumberUsageAndNumberFormatAndReservedIsGreaterThenSerial(usage, format, serial);
+            return this.numberingFormatIntervalRepository.findAllByNumberUsageAndNumberFormatAndReservedIsGreaterThenSerial(numberingFormatId, serial);
         }
     }
 }

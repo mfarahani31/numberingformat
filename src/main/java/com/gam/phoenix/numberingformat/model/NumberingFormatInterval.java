@@ -10,7 +10,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
@@ -25,19 +24,9 @@ import java.util.Date;
 public class NumberingFormatInterval implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NUMBERING_USAGE")
-    @Size(max = 50)
-    @NotNull
-    private String numberUsage;
-
-
-    @Column(name = "NUMBERING_FORMAT")
-    @Size(max = 400)
-    @NotNull
-    private String numberFormat;
 
     @Column(name = "RESERVED_START", length = 12)
     @Min(1L)
@@ -45,6 +34,11 @@ public class NumberingFormatInterval implements Serializable {
 
     @Column(name = "RESERVED_END", length = 12)
     private Long reservedEnd;
+
+    @ManyToOne
+    @JoinColumn(name = "NUMBERING_FORMAT_ID")
+    private NumberingFormat numberingFormat;
+
 
     @Column(name = "CREATED_BY", updatable = false)
     @Size(max = 200)

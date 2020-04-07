@@ -2,6 +2,7 @@ package com.gam.phoenix.numberingformat.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sun.istack.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,7 +25,7 @@ import java.util.Date;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class NumberingFormat implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "NUMBERING_USAGE")
@@ -44,6 +46,11 @@ public class NumberingFormat implements Serializable {
 
     @Column(name = "LAST_ALLOCATED_SERIAL", length = 12)
     private Long lastAllocatedSerial;
+
+    @Nullable
+    @OneToMany(mappedBy = "numberingFormat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NumberingFormatInterval> numberingFormatIntervals;
+
 
     @Column(name = "CREATED_BY", updatable = false)
     @Size(max = 200)

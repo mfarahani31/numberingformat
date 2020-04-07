@@ -37,14 +37,14 @@ public class NumberingFormatIntervalController {
         return ResponseEntity.ok(numberingFormatIntervalService.findAllNumberingFormatInterval());
     }
 
-    @GetMapping("/{usage}/{format}")
-    public ResponseEntity<List<NumberingFormatInterval>> getNumberingFormatIntervalByUsageAndFormat(@PathVariable String usage, @PathVariable String format, @RequestBody(required = false) boolean justApplicable, @RequestBody(required = false) Long serial) throws BusinessException {
-        return ResponseEntity.ok(this.numberingFormatIntervalService.findByUsageAndFormat(usage, format, justApplicable, serial));
+    @GetMapping("/{numberingFormatId}")
+    public ResponseEntity<List<NumberingFormatInterval>> getNumberingFormatIntervalByUsageAndFormat(@PathVariable Long numberingFormatId, @RequestBody(required = false) boolean justApplicable, @RequestBody(required = false) Long serial) throws BusinessException {
+        return ResponseEntity.ok(this.numberingFormatIntervalService.findByNumberingFormatId(numberingFormatId, justApplicable, serial));
     }
 
-    @DeleteMapping("/{usage}/{format}/{start}/{end}")
-    public ResponseEntity deleteNumberingFormatInterval(@PathVariable String usage, @PathVariable String format, @PathVariable Long start, @PathVariable Long end) throws BusinessException {
-        this.numberingFormatIntervalService.deleteNumberingFormatInterval(usage, format, start, end);
+    @DeleteMapping("/{reservedIntervalId}")
+    public ResponseEntity deleteNumberingFormatInterval(@PathVariable Long reservedIntervalId) throws BusinessException {
+        this.numberingFormatIntervalService.deleteNumberingFormatInterval(reservedIntervalId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

@@ -23,6 +23,6 @@ public interface NumberingFormatRepository extends JpaRepository<NumberingFormat
     @Transactional
     @Modifying
     @Query("UPDATE NumberingFormat n set n.lastAllocatedSerial = n.lastAllocatedSerial+1 where n.numberUsage = :usage and n.numberFormat = :format")
-    void increaseLastAllocatedSerialByOne(@Param("usage") String usage,
-                                          @Param("format") String format);
+    NumberingFormat increaseLastAllocatedSerialByOne(@Param("usage") String usage,
+                                                     @Param("format") String format);
 }

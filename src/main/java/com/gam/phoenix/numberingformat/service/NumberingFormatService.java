@@ -61,35 +61,39 @@ public class NumberingFormatService {
         }
     }
 
-    public String increaseLastAllocatedSerialByOne(String usage, String format, Long serialLength, String returnType, NumberingFormat inputNumberingFormat) throws BusinessException {
+    public String increaseLastAllocatedSerialByOne(String usage, String format, Long serialLength, String returnType, NumberingFormat inputNumberingFormat) {
         try {
-            Long serial = manageSerialLength(serialLength, inputNumberingFormat.getLastAllocatedSerial());
-
-
-            String type = manageSerialType(returnType);
+            // increase serial by one in db
             NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
-            this.numberingFormatRepository.increaseLastAllocatedSerialByOne(usage, format);
+            numberingFormat = this.numberingFormatRepository.increaseLastAllocatedSerialByOne(usage, format);
 
-            List<NumberingFormatInterval> numberingFormatIntervals = numberingFormatIntervalRepository.findAllByNumberingFormatIntervalByNumberingFormatId(numberingFormat.getId());
+            //=================================
+
+            Long serial = generateSerialWithProperFormat(serialLength, inputNumberingFormat.getLastAllocatedSerial());
+
+            // load serial from reserved serial in interval table
+            List<NumberingFormatInterval> numberingFormatIntervals = numberingFormatIntervalRepository.findAllNumberingFormatIntervalByNumberingFormatId(numberingFormat.getId());
             for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {
-                if (numberingFormatInterval.getReservedStart() < numberingFormat.getLastAllocatedSerial() || numberingFormatInterval.getReservedEnd() > numberingFormat.getLastAllocatedSerial())
-                    serial = serial + 1;
+                if (numberingFormatInterval.getReservedStart() <= numberingFormat.getLastAllocatedSerial() && numberingFormatInterval.getReservedEnd() >= numberingFormat.getLastAllocatedSerial())
+                    serial = numberingFormatInterval.getReservedEnd() + 1;
             }
-            if (returnType == null || returnType.equals("Serial"))
-                return serial.toString();
-            else if (returnType.equals("Full"))
+            if (returnType.equals("Full"))
                 return format + serial.toString();
-
-            return numberingFormat.getLastAllocatedSerial().toString();
+            else
+                return numberingFormat.getLastAllocatedSerial().toString();
 
         } catch (Exception e) {
-            inputNumberingFormat.setLastAllocatedSerial(1L);
-            inputNumberingFormat.setStartAt(1L);
-            inputNumberingFormat.setNumberUsage(usage);
-            inputNumberingFormat.setNumberFormat(format);
-            NumberingFormat numberingFormat = this.numberingFormatRepository.save(inputNumberingFormat);
+            NumberingFormat numberingFormat = this.insertNewNumberingFormatWithNewValues(inputNumberingFormat, usage, format);
             return numberingFormat.getLastAllocatedSerial().toString();
         }
+    }
+
+    private NumberingFormat insertNewNumberingFormatWithNewValues(NumberingFormat inputNumberingFormat, String usage, String format) {
+        inputNumberingFormat.setLastAllocatedSerial(1L);
+        inputNumberingFormat.setStartAt(1L);
+        inputNumberingFormat.setNumberUsage(usage);
+        inputNumberingFormat.setNumberFormat(format);
+        return this.numberingFormatRepository.save(inputNumberingFormat);
     }
 
     private String manageSerialType(String returnType) {
@@ -100,14 +104,11 @@ public class NumberingFormatService {
         return null;
     }
 
-    private Long manageSerialLength(Long serialLength, Long lastAllocatedSerial) {
-        if (serialLength == null || serialLength == 0)
-            return lastAllocatedSerial;
-        else if (serialLength > 0) {
+    private Long generateSerialWithProperFormat(Long serialLength, Long lastAllocatedSerial) {
+        if (serialLength > 0) {
             return addZeroAtBeginningOfSerial(serialLength, lastAllocatedSerial);
-        } else if (serialLength < lastAllocatedSerial.toString().length())
-            return null;
-        return null;
+        } else
+            return lastAllocatedSerial;
     }
 
     private Long addZeroAtBeginningOfSerial(Long serialLength, Long lastAllocatedSerial) {

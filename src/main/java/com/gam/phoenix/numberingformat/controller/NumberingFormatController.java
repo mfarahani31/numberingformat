@@ -58,8 +58,8 @@ public class NumberingFormatController {
 
     @PatchMapping("/{usage}/{format}/serial/increase")
     public ResponseEntity<String> increaseSerial(@PathVariable String usage, @PathVariable String format, @RequestBody(required = false) Long serialLength, @RequestBody(required = false) String returnType, @RequestBody(required = false) NumberingFormat inputNumberingFormat) throws BusinessException {
-        NumberingFormat numberingFormat = numberingFormatService.increaseLastAllocatedSerialByOne(usage, format, serialLength, returnType, inputNumberingFormat);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getNumberFormat() + numberingFormat.getLastAllocatedSerial().toString());
+        String serial = numberingFormatService.increaseLastAllocatedSerialByOne(usage, format, serialLength, returnType, inputNumberingFormat);
+        return ResponseEntity.status(HttpStatus.OK).body(serial);
     }
 
     @DeleteMapping("/{usage}/{format}")

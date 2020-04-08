@@ -13,7 +13,7 @@ public interface NumberingFormatIntervalRepository extends JpaRepository<Numberi
 
 
     @Query("select n from NumberingFormatInterval n where n.numberingFormat.id = :numberingFormatId order by n.id ASC")
-    List<NumberingFormatInterval> findAllByNumberingFormatIntervalByNumberingFormatId(@Param("numberingFormatId") Long numberingFormatId);
+    List<NumberingFormatInterval> findAllNumberingFormatIntervalByNumberingFormatId(@Param("numberingFormatId") Long numberingFormatId);
 
 
     @Query("SELECT n FROM NumberingFormatInterval n WHERE n.numberingFormat.id = :numberingFormatId and n.reservedEnd > :serial ORDER BY n.id ASC")

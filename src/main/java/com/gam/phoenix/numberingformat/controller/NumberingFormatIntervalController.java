@@ -15,9 +15,10 @@ import java.util.List;
 
 @RestController
 @Api(value = "NumberingFormatInterval Service!!!")
-@RequestMapping(NumberingFormatIntervalController.NUMBERING_FORMAT_INTERVAL_URL)
+@RequestMapping(value = {NumberingFormatIntervalController.NUMBERING_FORMAT_INTERVAL_URL, NumberingFormatController.NUMBERING_FORMAT_URL})
 public class NumberingFormatIntervalController {
     public static final String NUMBERING_FORMAT_INTERVAL_URL = "/numbering-format/api/v1/reserved-intervals";
+
 
     private NumberingFormatIntervalService numberingFormatIntervalService;
 
@@ -26,9 +27,9 @@ public class NumberingFormatIntervalController {
         this.numberingFormatIntervalService = numberingFormatIntervalService;
     }
 
-    @PostMapping
-    public ResponseEntity<NumberingFormatInterval> saveNumberFormatInterval(@Valid @RequestBody NumberingFormatInterval numberingFormatInterval) throws BusinessException {
-        this.numberingFormatIntervalService.saveNumberingFormatInterval(numberingFormatInterval);
+    @PostMapping("/{numberingFormatId}/reserved-intervals")
+    public ResponseEntity<NumberingFormatInterval> saveNumberFormatInterval(@PathVariable Long numberingFormatId, @Valid @RequestBody NumberingFormatInterval numberingFormatInterval) throws BusinessException {
+        this.numberingFormatIntervalService.saveNumberingFormatInterval(numberingFormatId, numberingFormatInterval);
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormatInterval);
     }
 

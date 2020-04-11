@@ -39,7 +39,7 @@ public class NumberingFormatIntervalController {
     }
 
     @DeleteMapping("/id/{numberingFormatId}/reserved-intervals/{reservedIntervalId}")
-    public ResponseEntity<?> deleteNumberingFormatInterval(@PathVariable Long numberingFormatId, @PathVariable Long reservedIntervalId) throws BusinessException {
+    public ResponseEntity deleteNumberingFormatInterval(@PathVariable Long numberingFormatId, @PathVariable Long reservedIntervalId) throws BusinessException {
         this.numberingFormatIntervalService.deleteNumberingFormatInterval(numberingFormatId, reservedIntervalId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

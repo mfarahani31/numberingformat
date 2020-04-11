@@ -96,14 +96,6 @@ public class NumberingFormatService {
         return this.numberingFormatRepository.save(inputNumberingFormat);
     }
 
-    private String manageSerialType(String returnType) {
-        if (returnType == null || returnType.equals("Serial"))
-            return "serial";
-        else if (returnType.equals("Full"))
-            return "Full";
-        return null;
-    }
-
     private Long generateSerialWithProperFormat(Long serialLength, Long lastAllocatedSerial) {
         if (serialLength > 0) {
             return addZeroAtBeginningOfSerial(serialLength, lastAllocatedSerial);

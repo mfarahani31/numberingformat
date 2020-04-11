@@ -12,6 +12,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -20,7 +21,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "TB_NFM_NUMBERING_FORMAT", uniqueConstraints = {@UniqueConstraint(columnNames = {"NUMBERING_USAGE", "NUMBERING_FORMAT"})})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class NumberingFormat extends AuditModel implements Serializable {
+public class NumberingFormat extends Auditable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,11 +45,19 @@ public class NumberingFormat extends AuditModel implements Serializable {
     @Column(name = "LAST_ALLOCATED_SERIAL", length = 12)
     private Long lastAllocatedSerial;
 
-    @Column(name = "CREATED_BY", updatable = false)
-    @Size(max = 200)
-    private String createdBy;
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "numberingFormat")
+    private List<NumberingFormatInterval> numberingFormatIntervalList;
 
-    @Column(name = "LAST_MODIFIED_BY")
-    @Size(max = 200)
-    private String lastModifiedBy;
+    @Override
+    public String toString() {
+        return "NumberingFormat{" +
+                "id=" + id +
+                ", numberUsage='" + numberUsage + '\'' +
+                ", numberFormat='" + numberFormat + '\'' +
+                ", startAt=" + startAt +
+                ", lastAllocatedSerial=" + lastAllocatedSerial +
+                '}';
+    }
 }

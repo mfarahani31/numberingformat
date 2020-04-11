@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @Api(value = "NumberingFormatInterval Service!!!")
-@RequestMapping(value = {NumberingFormatIntervalController.NUMBERING_FORMAT_INTERVAL_URL, NumberingFormatController.NUMBERING_FORMAT_URL})
+@RequestMapping(NumberingFormatController.NUMBERING_FORMAT_URL)
 public class NumberingFormatIntervalController {
     public static final String NUMBERING_FORMAT_INTERVAL_URL = "/numbering-format/api/v1/reserved-intervals";
 
@@ -27,25 +27,20 @@ public class NumberingFormatIntervalController {
         this.numberingFormatIntervalService = numberingFormatIntervalService;
     }
 
-    @PostMapping("/{numberingFormatId}/reserved-intervals")
+    @PostMapping("/id/{numberingFormatId}/reserved-intervals")
     public ResponseEntity<NumberingFormatInterval> saveNumberFormatInterval(@PathVariable Long numberingFormatId, @Valid @RequestBody NumberingFormatInterval numberingFormatInterval) throws BusinessException {
         this.numberingFormatIntervalService.saveNumberingFormatInterval(numberingFormatId, numberingFormatInterval);
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormatInterval);
     }
 
-    @GetMapping
-    public ResponseEntity<List<NumberingFormatInterval>> getAllNumberingFormatInterval() throws BusinessException {
-        return ResponseEntity.ok(numberingFormatIntervalService.findAllNumberingFormatInterval());
+    @GetMapping("/id/{numberingFormatId}/reserved-intervals")
+    public ResponseEntity<List<NumberingFormatInterval>> getAllNumberingFormatIntervalsByNumberingFormatId(@PathVariable Long numberingFormatId, @RequestBody(required = false) boolean justApplicable, @RequestBody(required = false) Long serial) throws BusinessException {
+        return ResponseEntity.ok(this.numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(numberingFormatId, justApplicable, serial));
     }
 
-    @GetMapping("/{numberingFormatId}")
-    public ResponseEntity<List<NumberingFormatInterval>> getNumberingFormatIntervalByUsageAndFormat(@PathVariable Long numberingFormatId, @RequestBody(required = false) boolean justApplicable, @RequestBody(required = false) Long serial) throws BusinessException {
-        return ResponseEntity.ok(this.numberingFormatIntervalService.findByNumberingFormatId(numberingFormatId, justApplicable, serial));
-    }
-
-    @DeleteMapping("/{reservedIntervalId}")
-    public ResponseEntity deleteNumberingFormatInterval(@PathVariable Long reservedIntervalId) throws BusinessException {
-        this.numberingFormatIntervalService.deleteNumberingFormatInterval(reservedIntervalId);
+    @DeleteMapping("/id/{numberingFormatId}/reserved-intervals/{reservedIntervalId}")
+    public ResponseEntity<?> deleteNumberingFormatInterval(@PathVariable Long numberingFormatId, @PathVariable Long reservedIntervalId) throws BusinessException {
+        this.numberingFormatIntervalService.deleteNumberingFormatInterval(numberingFormatId, reservedIntervalId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

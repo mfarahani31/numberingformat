@@ -35,7 +35,8 @@ public class NumberingFormatController {
 
     @GetMapping
     public ResponseEntity<List<NumberingFormat>> getAllNumberingFormats() throws BusinessException {
-        return ResponseEntity.ok(numberingFormatService.findAllNumberFormats());
+        List<NumberingFormat> allNumberFormats = numberingFormatService.findAllNumberFormats();
+        return ResponseEntity.ok(allNumberFormats);
     }
 
     @GetMapping("/{usage}/{format}")
@@ -57,13 +58,13 @@ public class NumberingFormatController {
     }
 
     @PatchMapping("/{usage}/{format}/serial/increase")
-    public ResponseEntity<String> increaseSerial(@PathVariable String usage, @PathVariable String format, @RequestBody(required = false) Long serialLength, @RequestBody(required = false) String returnType, @RequestBody(required = false) NumberingFormat inputNumberingFormat) throws BusinessException {
+    public ResponseEntity<String> increaseSerial(@PathVariable String usage, @PathVariable String format, @RequestBody(required = false) Long serialLength, @RequestBody(required = false) String returnType, @RequestBody(required = false) NumberingFormat inputNumberingFormat) {
         String serial = numberingFormatService.increaseLastAllocatedSerialByOne(usage, format, serialLength, returnType, inputNumberingFormat);
         return ResponseEntity.status(HttpStatus.OK).body(serial);
     }
 
     @DeleteMapping("/{usage}/{format}")
-    public ResponseEntity deleteNumberFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
+    public ResponseEntity<?> deleteNumberFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
         this.numberingFormatService.deleteNumberingFormat(usage, format);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

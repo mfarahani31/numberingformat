@@ -7,17 +7,21 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NumberingFormatIntervalRepository extends JpaRepository<NumberingFormatInterval, Long> {
 
 
-    @Query("select n from NumberingFormatInterval n where n.numberingFormat.id = :numberingFormatId order by n.id ASC")
-    List<NumberingFormatInterval> findAllNumberingFormatIntervalByNumberingFormatId(@Param("numberingFormatId") Long numberingFormatId);
+    //@Query("select n from NumberingFormatInterval n where n.numberingFormat.id = :numberingFormatId order by n.id ASC")
+    List<NumberingFormatInterval> findByNumberingFormatId(@Param("numberingFormatId") Long numberingFormatId);
 
 
     @Query("SELECT n FROM NumberingFormatInterval n WHERE n.numberingFormat.id = :numberingFormatId and n.reservedEnd > :serial ORDER BY n.id ASC")
     List<NumberingFormatInterval> findAllByNumberUsageAndNumberFormatAndReservedIsGreaterThenSerial(@Param("numberingFormatId") Long numberingFormatId,
                                                                                                     @Param("serial") Long serial);
+
+
+    Optional<NumberingFormatInterval> findByIdAndNumberingFormatId(Long id, Long numberingFormatId);
 
 }

@@ -72,7 +72,7 @@ public class NumberingFormatService {
             Long serial = generateSerialWithProperFormat(serialLength, inputNumberingFormat.getLastAllocatedSerial());
 
             // load serial from reserved serial in interval table
-            List<NumberingFormatInterval> numberingFormatIntervals = numberingFormatIntervalRepository.findAllNumberingFormatIntervalByNumberingFormatId(numberingFormat.getId());
+            List<NumberingFormatInterval> numberingFormatIntervals = numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormat.getId());
             for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {
                 if (numberingFormatInterval.getReservedStart() <= numberingFormat.getLastAllocatedSerial() && numberingFormatInterval.getReservedEnd() >= numberingFormat.getLastAllocatedSerial())
                     serial = numberingFormatInterval.getReservedEnd() + 1;

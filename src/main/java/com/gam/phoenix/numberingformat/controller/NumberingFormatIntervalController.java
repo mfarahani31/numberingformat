@@ -17,8 +17,6 @@ import java.util.List;
 @Api(value = "NumberingFormatInterval Service!!!")
 @RequestMapping(NumberingFormatController.NUMBERING_FORMAT_URL)
 public class NumberingFormatIntervalController {
-    public static final String NUMBERING_FORMAT_INTERVAL_URL = "/numbering-format/api/v1/reserved-intervals";
-
 
     private NumberingFormatIntervalService numberingFormatIntervalService;
 

@@ -116,6 +116,12 @@ public class NumberingFormatService {
     }
 
     public Long getNextAllocatedSerial(NumberingFormat numberingFormat) {
-        return numberingFormat.getLastAllocatedSerial() + 1;
+        Long nextSerial = numberingFormat.getLastAllocatedSerial() + 1;
+        List<NumberingFormatInterval> numberingFormatIntervals = numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormat.getId());
+        for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {
+            if (numberingFormatInterval.getReservedStart() <= nextSerial && numberingFormatInterval.getReservedEnd() >= nextSerial)
+                nextSerial = numberingFormatInterval.getReservedEnd() + 1;
+        }
+        return nextSerial;
     }
 }

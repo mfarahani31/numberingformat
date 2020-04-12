@@ -1,27 +1,23 @@
-//package com.gam.phoenix.numberingformat;
+package com.gam.phoenix.numberingformat;
+
+import com.gam.phoenix.numberingformat.model.NumberingFormat;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+
+import java.util.Date;
+
+public class MotherObject {
+    public static NumberingFormat getAnyValidNumberingFormat() {
+
+        Date date = new Date();
+        return new NumberingFormat(1L,
+                "test1",
+                "test1",
+                300L,
+                301L,
+                null);
+    }
 //
-//import com.gam.phoenix.numberingformat.model.NumberingFormat;
-//import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
-//
-//import java.util.ArrayList;
-//import java.util.Date;
-//import java.util.Optional;
-//
-//public class MotherObject {
-//    public static NumberingFormat getAnyValidNumberingFormat() {
-//
-//        Date date = new Date();
-//        return new NumberingFormat(1L,
-//                "test1",
-//                "test1",
-//                300L,
-//                301L,
-//                new NumberingFormatInterval(1L,);
-//                "admin",
-//                date,
-//                "admin",
-//                date);
-//    }
 //    public static NumberingFormatInterval getAnyValidNumberingFormatInterval() {
 //
 //        Date date = new Date();
@@ -50,8 +46,21 @@
 //                date);
 //        return Optional.of(numberingFormat);
 //    }
-//
-//    public static Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
-//        return startAt - 1;
-//    }
-//}
+
+    public static Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
+        return startAt - 1;
+    }
+
+    public static HttpEntity<String> getValidHttpEntityWithHeaderUsername() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("username", "username");
+        return new HttpEntity<>(null, headers);
+    }
+
+    public static HttpEntity<NumberingFormat> getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormat() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("username", "username");
+        return new HttpEntity<>(MotherObject.getAnyValidNumberingFormat(), headers);
+    }
+
+}

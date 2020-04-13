@@ -1,6 +1,7 @@
 package com.gam.phoenix.numberingformat.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,5 +36,6 @@ public class NumberingFormatInterval extends Auditable implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "NUMBERING_FORMAT_ID", nullable = false)
+    @JsonIgnore
     private NumberingFormat numberingFormat;
 }

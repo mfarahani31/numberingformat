@@ -27,7 +27,7 @@ public class NumberingFormatIntervalService {
         return this.numberingFormatRepository.findById(numberingFormatId).map(numberingFormat -> {
             numberingFormatInterval.setNumberingFormat(numberingFormat);
             return numberingFormatIntervalRepository.save(numberingFormatInterval);
-        }).orElseThrow(() -> new BusinessException(ErrorMessages.DUPLICATE_NUMBERFORMAT));
+        }).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST));
     }
 
     public List<NumberingFormatInterval> getAllReservedIntervalsByNumberingFormatId(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) throws BusinessException {
@@ -45,8 +45,8 @@ public class NumberingFormatIntervalService {
         }).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST));
     }
 
-    public List<NumberingFormatInterval> retrieveNumberingFormatIntervalById(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) {
-        if (justApplicableIntervals == false || justApplicableIntervals == null) {
+    private List<NumberingFormatInterval> retrieveNumberingFormatIntervalById(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) {
+        if (!justApplicableIntervals) {
             return this.numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormatId);
         } else if (serial != null) {
             return this.numberingFormatIntervalRepository.findAllByNumberUsageAndNumberFormatAndReservedIsGreaterThenSerial(numberingFormatId, serial);

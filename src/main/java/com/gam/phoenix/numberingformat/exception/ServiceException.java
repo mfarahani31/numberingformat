@@ -1,7 +1,9 @@
 package com.gam.phoenix.numberingformat.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ServiceException extends Exception {
     private static final long serialVersionUID = 5270039361418646509L;

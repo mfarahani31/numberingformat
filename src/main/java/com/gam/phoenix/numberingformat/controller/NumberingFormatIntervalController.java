@@ -32,7 +32,7 @@ public class NumberingFormatIntervalController {
     }
 
     @GetMapping("/id/{numberingFormatId}/reserved-intervals")
-    public ResponseEntity<List<NumberingFormatInterval>> getAllNumberingFormatIntervalsByNumberingFormatId(@PathVariable Long numberingFormatId, @RequestBody(required = false) boolean justApplicable, @RequestBody(required = false) Long serial) throws BusinessException {
+    public ResponseEntity<List<NumberingFormatInterval>> getAllNumberingFormatIntervalsByNumberingFormatId(@PathVariable Long numberingFormatId, @RequestParam(required = false, defaultValue = "false") boolean justApplicable, @RequestParam(required = false) Long serial) throws BusinessException {
         return ResponseEntity.ok(this.numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(numberingFormatId, justApplicable, serial));
     }
 
@@ -41,5 +41,4 @@ public class NumberingFormatIntervalController {
         this.numberingFormatIntervalService.deleteNumberingFormatInterval(numberingFormatId, reservedIntervalId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }

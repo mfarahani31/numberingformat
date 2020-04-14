@@ -1,5 +1,6 @@
 package com.gam.phoenix.numberingformat.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,12 +25,14 @@ public abstract class Auditable implements Serializable {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_DATE", nullable = false, updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //@NotNull(message = "Created date cannot be null")
     private Date createdDate;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_MODIFIED_DATE", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //@NotNull(message = "Last modified date cannot be null")
     private Date lastModifiedDate;
 

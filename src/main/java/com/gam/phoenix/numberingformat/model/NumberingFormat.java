@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -21,6 +24,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Audited
+@AuditOverride(forClass = Auditable.class)
+@AuditTable("TB_NFM_NUMBERING_FORMAT_AUD")
 @Table(name = "TB_NFM_NUMBERING_FORMAT", uniqueConstraints = {@UniqueConstraint(columnNames = {"NUMBERING_USAGE", "NUMBERING_FORMAT"})})
 @SequenceGenerator(name = "SQ_NFM_NUMBERING_FORMAT", sequenceName = "SQ_NFM_NUMBERING_FORMAT", allocationSize = 1)
 public class NumberingFormat extends Auditable implements Serializable {

@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -19,6 +22,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Audited
+@AuditOverride(forClass = Auditable.class)
+@AuditTable("TB_NFM_RESERVED_NUMBER_INTERVAL_AUD")
 @Table(name = "TB_NFM_RESERVED_NUMBER_INTERVAL")
 @CheckEndGreaterThanStart
 @SequenceGenerator(name = "SQ_NFM_RESERVED_NUMBER_INTERVAL", sequenceName = "SQ_NFM_RESERVED_NUMBER_INTERVAL", allocationSize = 1)

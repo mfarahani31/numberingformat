@@ -2,6 +2,7 @@ package com.gam.phoenix.numberingformat.controller;
 
 import com.gam.phoenix.numberingformat.constants.ErrorMessages;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
+import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
 import io.swagger.annotations.Api;
@@ -63,8 +64,8 @@ public class NumberingFormatController {
     }
 
     @PatchMapping("/{usage}/{format}/serial/increase")
-    public ResponseEntity<String> increaseSerial(@PathVariable String usage, @PathVariable String format, @RequestBody(required = false) Long serialLength, @RequestBody(required = false) String returnType, @RequestBody(required = false) NumberingFormat inputNumberingFormat) {
-        String serial = numberingFormatService.increaseLastAllocatedSerialByOne(usage, format, serialLength, returnType, inputNumberingFormat);
+    public ResponseEntity<String> increaseSerial(@PathVariable String usage, @PathVariable String format, @RequestBody(required = false) IncreaseRequestModel increaseRequestModel) {
+        String serial = numberingFormatService.increaseLastAllocatedSerialByOne(usage, format, increaseRequestModel);
         return ResponseEntity.status(HttpStatus.OK).body(serial);
     }
 

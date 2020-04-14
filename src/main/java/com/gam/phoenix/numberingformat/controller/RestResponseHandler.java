@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class RestResponseHandler {
 
     @ModelAttribute
-    public void injectHeader(@RequestHeader(value = "username") String username) {
-        MDC.put("username", username);
+    public void injectHeader(@RequestHeader(value = "USERNAME") String username) {
+        MDC.put("USERNAME", username);
     }
 }

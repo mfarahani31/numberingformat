@@ -24,9 +24,12 @@ public interface NumberingFormatRepository extends JpaRepository<NumberingFormat
     void deleteNumberingFormatByNumberUsageAndNumberFormat(@Param("usage") String usage,
                                                            @Param("format") String format);
 
+
     @Transactional
     @Modifying
-    @Query("UPDATE NumberingFormat n set n.lastAllocatedSerial = n.lastAllocatedSerial+1 where n.numberUsage = :usage and n.numberFormat = :format")
-    NumberingFormat increaseLastAllocatedSerialByOne(@Param("usage") String usage,
-                                                     @Param("format") String format);
+    @Query("UPDATE NumberingFormat n set n.lastAllocatedSerial = :newSerial where n.numberUsage = :usage and n.numberFormat = :format")
+    void updateLastAllocatedSerial(@Param("newSerial") Long newSerial, @Param("usage") String usage,
+                                   @Param("format") String format);
+
+
 }

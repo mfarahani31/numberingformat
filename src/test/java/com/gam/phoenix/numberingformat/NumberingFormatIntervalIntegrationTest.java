@@ -28,6 +28,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class NumberingFormatIntervalIntegrationTest {

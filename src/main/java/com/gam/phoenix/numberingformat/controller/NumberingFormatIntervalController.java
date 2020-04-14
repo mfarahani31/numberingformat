@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 @RestController
 @Api(value = "NumberingFormatInterval Service!!!")
 @RequestMapping(NumberingFormatController.NUMBERING_FORMAT_URL)

@@ -6,6 +6,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.IOException;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
 @WebAppConfiguration
 public class TestMapperUtil {
     protected String mapToJson(Object obj) throws JsonProcessingException {

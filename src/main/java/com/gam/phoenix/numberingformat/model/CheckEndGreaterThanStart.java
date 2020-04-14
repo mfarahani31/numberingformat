@@ -4,6 +4,10 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 @Documented
 @Constraint(validatedBy = EndGreaterThanStartValidator.class)
 @Target(ElementType.TYPE)

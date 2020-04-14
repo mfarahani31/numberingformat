@@ -6,6 +6,11 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
+
 public class AuditorAwareImpl implements AuditorAware<String> {
 
     public Optional<String> getCurrentAuditor() {

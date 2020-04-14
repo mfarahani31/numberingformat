@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 @Service
 public class NumberingFormatIntervalService {
 

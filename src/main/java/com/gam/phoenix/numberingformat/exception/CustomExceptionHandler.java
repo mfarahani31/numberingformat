@@ -11,6 +11,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)

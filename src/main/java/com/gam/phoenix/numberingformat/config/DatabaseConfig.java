@@ -7,6 +7,11 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
+
 @Configuration
 @EntityScan(basePackages = {"com.gam.phoenix.numberingformat.model"})
 @EnableJpaAuditing(

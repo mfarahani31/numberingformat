@@ -4,6 +4,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 public class TimePicker {
     private TimePicker() {
     }

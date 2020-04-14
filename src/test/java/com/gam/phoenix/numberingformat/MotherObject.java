@@ -6,7 +6,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
 import java.util.Optional;
-
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
 public class MotherObject {
     public static NumberingFormat getAnyValidNumberingFormat() {
 

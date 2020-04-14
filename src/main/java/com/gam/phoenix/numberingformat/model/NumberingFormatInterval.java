@@ -10,6 +10,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor

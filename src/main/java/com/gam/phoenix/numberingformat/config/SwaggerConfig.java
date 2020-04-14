@@ -14,8 +14,11 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Arrays;
+import java.util.Collections;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
@@ -23,7 +26,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     public Docket apiDocket() {
         return (new Docket(DocumentationType.SWAGGER_2))
                 .globalOperationParameters(
-                        Arrays.asList(
+                        Collections.singletonList(
                                 new ParameterBuilder()
                                         .name("USERNAME")
                                         .modelRef(new ModelRef("string"))

@@ -3,6 +3,11 @@ package com.gam.phoenix.numberingformat.exception;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ServiceException extends Exception {

@@ -3,6 +3,11 @@ package com.gam.phoenix.numberingformat.exception;
 
 import lombok.Getter;
 
+
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
+
 @Getter
 public class ErrorResponse {
 

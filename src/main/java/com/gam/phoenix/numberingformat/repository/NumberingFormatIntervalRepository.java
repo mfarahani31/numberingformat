@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
+ **/
 @Repository
 public interface NumberingFormatIntervalRepository extends JpaRepository<NumberingFormatInterval, Long> {
 

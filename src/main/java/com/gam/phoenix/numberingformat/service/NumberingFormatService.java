@@ -74,7 +74,8 @@ public class NumberingFormatService {
             this.numberingFormatRepository.updateLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1, usage, format);
 
             //=================================
-            Long newSerial = this.findByUsageAndFormat(usage, format).get().getLastAllocatedSerial();
+
+            Long newSerial = this.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)).getLastAllocatedSerial();
             List<NumberingFormatInterval> numberingFormatIntervals = numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormat.getId());
             for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {
                 if (numberingFormatInterval.getReservedStart() <= numberingFormat.getLastAllocatedSerial() && numberingFormatInterval.getReservedEnd() >= numberingFormat.getLastAllocatedSerial()) {

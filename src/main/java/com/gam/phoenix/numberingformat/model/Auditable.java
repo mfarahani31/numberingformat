@@ -1,6 +1,5 @@
 package com.gam.phoenix.numberingformat.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,9 +15,6 @@ import java.util.Date;
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(
-        value = {"CREATED_DATE", "LAST_MODIFIED_DATE"},
-        allowGetters = true)
 public abstract class Auditable implements Serializable {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

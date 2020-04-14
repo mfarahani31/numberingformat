@@ -1,8 +1,6 @@
 package com.gam.phoenix.numberingformat.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,11 +17,11 @@ import java.io.Serializable;
 @Entity
 @Table(name = "TB_NFM_RESERVED_NUMBER_INTERVAL")
 @CheckEndGreaterThanStart
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@SequenceGenerator(name = "SQ_NFM_RESERVED_NUMBER_INTERVAL", sequenceName = "SQ_NFM_RESERVED_NUMBER_INTERVAL", allocationSize = 1)
 public class NumberingFormatInterval extends Auditable implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_NFM_RESERVED_NUMBER_INTERVAL")
     private Long id;
 
 

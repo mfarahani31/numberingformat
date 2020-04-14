@@ -1,7 +1,5 @@
 package com.gam.phoenix.numberingformat.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,10 +18,11 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "TB_NFM_NUMBERING_FORMAT", uniqueConstraints = {@UniqueConstraint(columnNames = {"NUMBERING_USAGE", "NUMBERING_FORMAT"})})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@SequenceGenerator(name = "SQ_NFM_NUMBERING_FORMAT", sequenceName = "SQ_NFM_NUMBERING_FORMAT", allocationSize = 1)
 public class NumberingFormat extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_NFM_NUMBERING_FORMAT")
+    @Column(name = "NUMBERING_FORMAT_ID")
     private Long id;
 
     @Column(name = "NUMBERING_USAGE")

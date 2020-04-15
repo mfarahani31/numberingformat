@@ -8,7 +8,6 @@ import com.gam.phoenix.numberingformat.model.dto.NumberingFormatDto;
 import com.gam.phoenix.numberingformat.model.dto.NumberingFormatMapper;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
 import io.swagger.annotations.Api;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import java.util.Optional;
 /**
  * @author Mohammad Farahani (farahani@gamelectronics.com)
  **/
-@RequiredArgsConstructor
 @RestController
 @Api(value = "NumberingFormat Service!!!")
 @RequestMapping(NumberingFormatController.NUMBERING_FORMAT_URL)

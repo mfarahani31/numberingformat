@@ -23,7 +23,6 @@ import java.util.Optional;
 public class NumberingFormatService {
 
     private NumberingFormatRepository numberingFormatRepository;
-
     private NumberingFormatIntervalRepository numberingFormatIntervalRepository;
 
     @Autowired
@@ -68,40 +67,43 @@ public class NumberingFormatService {
     }
 
     public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel increaseRequestModel) {
-        try {
-            if (increaseRequestModel == null)
-                increaseRequestModel = new IncreaseRequestModel();
-            increaseRequestModel.setReturnType(checkIncreaseRequestModelProperties(increaseRequestModel).getReturnType());
-            increaseRequestModel.setSerialLength(checkIncreaseRequestModelProperties(increaseRequestModel).getSerialLength());
 
-            // increase serial by one in db
-            NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
-            this.numberingFormatRepository.updateLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1, usage, format);
-
-            //=================================
-
-            Long newSerial = this.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)).getLastAllocatedSerial();
-            List<NumberingFormatInterval> numberingFormatIntervals = numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormat.getId());
-            for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {
-                if (numberingFormatInterval.getReservedStart() <= numberingFormat.getLastAllocatedSerial() && numberingFormatInterval.getReservedEnd() >= numberingFormat.getLastAllocatedSerial()) {
-                    newSerial = numberingFormatInterval.getReservedEnd() + 1;
-                    this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
-                }
-            }
-
-            String newSerialWithProperFormat = generateSerialWithProperFormat(increaseRequestModel.getSerialLength(), newSerial);
-
-            // load serial from reserved serial in interval table
-
-            if (increaseRequestModel.getReturnType().equals("Full"))
-                return format + newSerialWithProperFormat;
-            else
-                return newSerial.toString();
-
-        } catch (Exception e) {
-            NumberingFormat numberingFormat = this.insertNewNumberingFormatWithNewValues(usage, format);
+        NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
+        if (numberingFormat == null) {
+            numberingFormat = this.insertNewNumberingFormatWithNewValues(usage, format);
             return numberingFormat.getLastAllocatedSerial().toString();
+        } else {
+            Long newSerial = getNextAllocatedSerial(numberingFormat);
+            this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
+
+            increaseRequestModel = initializeIncreaseRequestModel(increaseRequestModel);
+            String newSerialWithProperFormat = generateSerialWithRequiredLength(increaseRequestModel.getSerialLength(), newSerial);
+            String returnType = increaseRequestModel.getReturnType();
+            String result;
+            assert returnType != null;
+            if (returnType.equals("Full"))
+                result = format + newSerialWithProperFormat;
+            else
+                result = newSerial.toString();
+            return result;
         }
+    }
+
+    private String newSerialInCorrectForm(String returnType, String format, String newSerialWithProperFormat, Long newSerial) {
+        if (returnType.equals("Full"))
+            return format + newSerialWithProperFormat;
+        else
+            return newSerial.toString();
+    }
+
+    private IncreaseRequestModel initializeIncreaseRequestModel(IncreaseRequestModel increaseRequestModel) {
+        if (increaseRequestModel == null)
+            increaseRequestModel = new IncreaseRequestModel();
+        if (increaseRequestModel.getSerialLength() == null)
+            increaseRequestModel.setSerialLength(0L);
+        if (increaseRequestModel.getReturnType() == null)
+            increaseRequestModel.setReturnType("Serial");
+        return increaseRequestModel;
     }
 
     private NumberingFormat insertNewNumberingFormatWithNewValues(String usage, String format) {
@@ -113,7 +115,7 @@ public class NumberingFormatService {
         return this.numberingFormatRepository.save(inputNumberingFormat);
     }
 
-    private String generateSerialWithProperFormat(Long serialLength, Long newSerial) {
+    private String generateSerialWithRequiredLength(Long serialLength, Long newSerial) {
         if (serialLength > 0) {
             return addZeroAtBeginningOfSerial(serialLength, newSerial);
         } else
@@ -121,18 +123,10 @@ public class NumberingFormatService {
     }
 
     private String addZeroAtBeginningOfSerial(Long serialLength, Long lastAllocatedSerial) {
-        String serialWithZeroAtBeginning = String.format("%0" + serialLength + "d", lastAllocatedSerial); // 0009
+        String serialWithZeroAtBeginning = String.format("%0" + serialLength + "d", lastAllocatedSerial); // Like : 0009
         if (serialWithZeroAtBeginning.length() > serialLength)
             return lastAllocatedSerial.toString();
         else return serialWithZeroAtBeginning;
-    }
-
-    private IncreaseRequestModel checkIncreaseRequestModelProperties(IncreaseRequestModel increaseRequestModel) {
-        if (increaseRequestModel.getSerialLength() == null)
-            increaseRequestModel.setSerialLength(0L);
-        if (increaseRequestModel.getReturnType() == null)
-            increaseRequestModel.setReturnType("Serial");
-        return increaseRequestModel;
     }
 
     public Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
@@ -140,12 +134,12 @@ public class NumberingFormatService {
     }
 
     public Long getNextAllocatedSerial(NumberingFormat numberingFormat) {
-        Long nextSerial = numberingFormat.getLastAllocatedSerial() + 1;
-        List<NumberingFormatInterval> numberingFormatIntervals = numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormat.getId());
+        Long newSerial = numberingFormat.getLastAllocatedSerial() + 1;
+        List<NumberingFormatInterval> numberingFormatIntervals = this.numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormat.getId());
         for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {
-            if (numberingFormatInterval.getReservedStart() <= nextSerial && numberingFormatInterval.getReservedEnd() >= nextSerial)
-                nextSerial = numberingFormatInterval.getReservedEnd() + 1;
+            if (numberingFormatInterval.getReservedStart() <= newSerial && numberingFormatInterval.getReservedEnd() >= newSerial)
+                newSerial = numberingFormatInterval.getReservedEnd() + 1;
         }
-        return nextSerial;
+        return newSerial;
     }
 }

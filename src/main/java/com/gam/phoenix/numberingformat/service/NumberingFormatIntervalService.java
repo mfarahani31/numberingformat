@@ -53,10 +53,10 @@ public class NumberingFormatIntervalService {
         if (!justApplicableIntervals) {
             return this.numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormatId);
         } else if (serial != null) {
-            return this.numberingFormatIntervalRepository.findAllByNumberUsageAndNumberFormatAndReservedIsGreaterThenSerial(numberingFormatId, serial);
+            return this.numberingFormatIntervalRepository.findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(numberingFormatId, serial);
         } else {
             serial = 1L;
-            return this.numberingFormatIntervalRepository.findAllByNumberUsageAndNumberFormatAndReservedIsGreaterThenSerial(numberingFormatId, serial);
+            return this.numberingFormatIntervalRepository.findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(numberingFormatId, serial);
         }
     }
 }

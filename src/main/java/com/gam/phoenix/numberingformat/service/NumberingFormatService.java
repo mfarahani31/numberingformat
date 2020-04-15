@@ -69,6 +69,11 @@ public class NumberingFormatService {
 
     public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel increaseRequestModel) {
         try {
+            if (increaseRequestModel == null)
+                increaseRequestModel = new IncreaseRequestModel();
+            increaseRequestModel.setReturnType(checkIncreaseRequestModelProperties(increaseRequestModel).getReturnType());
+            increaseRequestModel.setSerialLength(checkIncreaseRequestModelProperties(increaseRequestModel).getSerialLength());
+
             // increase serial by one in db
             NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
             this.numberingFormatRepository.updateLastAllocatedSerial(numberingFormat.getLastAllocatedSerial() + 1, usage, format);
@@ -120,6 +125,14 @@ public class NumberingFormatService {
         if (serialWithZeroAtBeginning.length() > serialLength)
             return lastAllocatedSerial.toString();
         else return serialWithZeroAtBeginning;
+    }
+
+    private IncreaseRequestModel checkIncreaseRequestModelProperties(IncreaseRequestModel increaseRequestModel) {
+        if (increaseRequestModel.getSerialLength() == null)
+            increaseRequestModel.setSerialLength(0L);
+        if (increaseRequestModel.getReturnType() == null)
+            increaseRequestModel.setReturnType("Serial");
+        return increaseRequestModel;
     }
 
     public Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {

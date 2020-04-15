@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 /**
- * @author mohammad
+ * @author Mohammad Farahani (farahani@gamelectronics.com)
  */
 @Data
 @AllArgsConstructor

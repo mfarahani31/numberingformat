@@ -2,10 +2,12 @@ package com.gam.phoenix.numberingformat;
 
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
+import com.gam.phoenix.numberingformat.model.dto.NumberingFormatDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
 import java.util.Optional;
+
 /**
  * @author Mohammad Farahani (farahani@gamelectronics.com)
  **/
@@ -14,6 +16,14 @@ public class MotherObject {
 
         return new NumberingFormat(1L,
                 "test1",
+                "test1",
+                300L,
+                301L,
+                null);
+    }
+
+    public static NumberingFormatDto getAnyValidNumberingFormatDto() {
+        return new NumberingFormatDto("test1",
                 "test1",
                 300L,
                 301L,

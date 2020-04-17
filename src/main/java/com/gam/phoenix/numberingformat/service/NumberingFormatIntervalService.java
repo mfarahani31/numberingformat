@@ -42,8 +42,8 @@ public class NumberingFormatIntervalService {
         }
     }
 
-    public void deleteNumberingFormatInterval(Long numberingFormatId, Long reservedIntervalId) throws BusinessException {
-        this.numberingFormatIntervalRepository.findByIdAndNumberingFormatId(reservedIntervalId, numberingFormatId).map(numberingFormatInterval -> {
+    public NumberingFormatInterval deleteNumberingFormatInterval(Long numberingFormatId, Long reservedIntervalId) throws BusinessException {
+        return this.numberingFormatIntervalRepository.findByIdAndNumberingFormatId(reservedIntervalId, numberingFormatId).map(numberingFormatInterval -> {
             numberingFormatIntervalRepository.delete(numberingFormatInterval);
             return numberingFormatInterval;
         }).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST));

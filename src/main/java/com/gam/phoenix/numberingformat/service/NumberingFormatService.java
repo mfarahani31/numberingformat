@@ -73,7 +73,7 @@ public class NumberingFormatService {
             numberingFormat = this.insertNewNumberingFormatWithNewValues(usage, format);
             return numberingFormat.getLastAllocatedSerial().toString();
         } else {
-            Long newSerial = getNextAllocatedSerial(numberingFormat);
+            Long newSerial = this.getNextAllocatedSerial(numberingFormat);
             this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
 
             increaseRequestModel = initializeIncreaseRequestModel(increaseRequestModel);
@@ -135,7 +135,7 @@ public class NumberingFormatService {
 
     public Long getNextAllocatedSerial(NumberingFormat numberingFormat) {
         Long newSerial = numberingFormat.getLastAllocatedSerial() + 1;
-        List<NumberingFormatInterval> numberingFormatIntervals = this.numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormat.getId());
+        List<NumberingFormatInterval> numberingFormatIntervals = this.numberingFormatIntervalRepository.findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(numberingFormat.getId(), newSerial);
         for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {
             if (numberingFormatInterval.getReservedStart() <= newSerial && numberingFormatInterval.getReservedEnd() >= newSerial)
                 newSerial = numberingFormatInterval.getReservedEnd() + 1;

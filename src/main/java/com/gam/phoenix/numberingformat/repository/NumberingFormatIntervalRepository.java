@@ -16,7 +16,6 @@ import java.util.Optional;
 public interface NumberingFormatIntervalRepository extends JpaRepository<NumberingFormatInterval, Long> {
 
 
-    //@Query("select n from NumberingFormatInterval n where n.numberingFormat.id = :numberingFormatId order by n.id ASC")
     List<NumberingFormatInterval> findByNumberingFormatId(Long numberingFormatId);
 
 

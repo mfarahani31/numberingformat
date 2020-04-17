@@ -73,10 +73,7 @@ public class NumberingFormatController {
     }
 
     @DeleteMapping("/{usage}/{format}")
-    public ResponseEntity deleteNumberFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
+    public void deleteNumberFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
         this.numberingFormatService.deleteNumberingFormat(usage, format);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-
 }

@@ -74,7 +74,7 @@ class NumberingFormatIntervalIntegrationTest {
 
         ResponseEntity responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), ResponseEntity.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         verify(numberingFormatIntervalService, times(1)).deleteNumberingFormatInterval(anyLong(), anyLong());
     }

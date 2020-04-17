@@ -7,7 +7,6 @@ import com.gam.phoenix.numberingformat.model.dto.NumberingFormatIntervalDto;
 import com.gam.phoenix.numberingformat.model.dto.NumberingFormatIntervalMapper;
 import com.gam.phoenix.numberingformat.service.NumberingFormatIntervalService;
 import io.swagger.annotations.Api;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ import java.util.List;
 /**
  * @author Mohammad Farahani (farahani@gamelectronics.com)
  **/
-@RequiredArgsConstructor
 @RestController
 @Api(value = "NumberingFormatInterval Service!!!")
 @RequestMapping(NumberingFormatController.NUMBERING_FORMAT_URL)
@@ -47,8 +45,7 @@ public class NumberingFormatIntervalController {
     }
 
     @DeleteMapping("/id/{numberingFormatId}/reserved-intervals/{reservedIntervalId}")
-    public ResponseEntity deleteNumberingFormatInterval(@PathVariable Long numberingFormatId, @PathVariable Long reservedIntervalId) throws BusinessException {
+    public void deleteNumberingFormatInterval(@PathVariable Long numberingFormatId, @PathVariable Long reservedIntervalId) throws BusinessException {
         this.numberingFormatIntervalService.deleteNumberingFormatInterval(numberingFormatId, reservedIntervalId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

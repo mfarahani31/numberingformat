@@ -178,7 +178,7 @@ class NumberingFormatIntegrationTest {
 
         ResponseEntity responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), ResponseEntity.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         verify(numberingFormatService, times(1)).deleteNumberingFormat(anyString(), anyString());
     }

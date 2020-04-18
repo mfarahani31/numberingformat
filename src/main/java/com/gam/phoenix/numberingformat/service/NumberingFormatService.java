@@ -9,7 +9,6 @@ import com.gam.phoenix.numberingformat.repository.NumberingFormatIntervalReposit
 import com.gam.phoenix.numberingformat.repository.NumberingFormatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +30,11 @@ public class NumberingFormatService {
         this.numberingFormatIntervalRepository = numberingFormatIntervalRepository;
     }
 
-    public NumberingFormat saveNumberFormat(NumberingFormat numberFormat) throws BusinessException {
+    public NumberingFormat saveNumberingFormat(NumberingFormat numberingFormat) throws BusinessException {
         try {
-            numberFormat.setLastAllocatedSerial(decreaseStartAtByOneForLastAllocatedSerial(numberFormat.getStartAt()));
-            return this.numberingFormatRepository.save(numberFormat);
-        } catch (HttpServerErrorException e) {
+            numberingFormat.setLastAllocatedSerial(decreaseStartAtByOneForLastAllocatedSerial(numberingFormat.getStartAt()));
+            return this.numberingFormatRepository.save(numberingFormat);
+        } catch (Exception e) {
             throw new BusinessException(ErrorMessages.DUPLICATE_NUMBERFORMAT);
         }
     }
@@ -55,9 +54,9 @@ public class NumberingFormatService {
         } catch (Exception e) {
             throw new BusinessException(ErrorMessages.NOT_EXIST);
         }
-
     }
 
+    // Todo : method does not throw exception
     public void deleteNumberingFormat(String usage, String format) throws BusinessException {
         try {
             this.numberingFormatRepository.deleteNumberingFormatByNumberUsageAndNumberFormat(usage, format);
@@ -66,15 +65,16 @@ public class NumberingFormatService {
         }
     }
 
-    public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel increaseRequestModel) {
+    public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel increaseRequestModel) throws BusinessException {
 
         NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
         if (numberingFormat == null) {
-            numberingFormat = this.insertNewNumberingFormatWithNewValues(usage, format);
+            numberingFormat = this.initializeNumberingFormatWithNewValues(usage, format);
+            numberingFormat = this.saveNumberingFormat(numberingFormat);
             return numberingFormat.getLastAllocatedSerial().toString();
         } else {
-            Long newSerial = this.getNextAllocatedSerial(numberingFormat);
-            this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
+            Long newSerial = this.getNextValidAllocatedSerial(numberingFormat);
+            this.updateLastAllocatedSerial(newSerial, usage, format);
 
             increaseRequestModel = initializeIncreaseRequestModel(increaseRequestModel);
             String newSerialWithProperFormat = generateSerialWithRequiredLength(increaseRequestModel.getSerialLength(), newSerial);
@@ -89,11 +89,21 @@ public class NumberingFormatService {
         }
     }
 
-    private String newSerialInCorrectForm(String returnType, String format, String newSerialWithProperFormat, Long newSerial) {
-        if (returnType.equals("Full"))
-            return format + newSerialWithProperFormat;
-        else
-            return newSerial.toString();
+    private void updateLastAllocatedSerial(Long newSerial, String usage, String format) throws BusinessException {
+        try {
+            this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorMessages.NOT_EXIST);
+        }
+    }
+
+    private NumberingFormat initializeNumberingFormatWithNewValues(String usage, String format) {
+        NumberingFormat inputNumberingFormat = new NumberingFormat();
+        inputNumberingFormat.setLastAllocatedSerial(1L);
+        inputNumberingFormat.setStartAt(1L);
+        inputNumberingFormat.setNumberUsage(usage);
+        inputNumberingFormat.setNumberFormat(format);
+        return inputNumberingFormat;
     }
 
     private IncreaseRequestModel initializeIncreaseRequestModel(IncreaseRequestModel increaseRequestModel) {
@@ -104,15 +114,6 @@ public class NumberingFormatService {
         if (increaseRequestModel.getReturnType() == null)
             increaseRequestModel.setReturnType("Serial");
         return increaseRequestModel;
-    }
-
-    private NumberingFormat insertNewNumberingFormatWithNewValues(String usage, String format) {
-        NumberingFormat inputNumberingFormat = new NumberingFormat();
-        inputNumberingFormat.setLastAllocatedSerial(1L);
-        inputNumberingFormat.setStartAt(1L);
-        inputNumberingFormat.setNumberUsage(usage);
-        inputNumberingFormat.setNumberFormat(format);
-        return this.numberingFormatRepository.save(inputNumberingFormat);
     }
 
     private String generateSerialWithRequiredLength(Long serialLength, Long newSerial) {
@@ -129,11 +130,11 @@ public class NumberingFormatService {
         else return serialWithZeroAtBeginning;
     }
 
-    public Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
+    private Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
         return startAt - 1;
     }
 
-    public Long getNextAllocatedSerial(NumberingFormat numberingFormat) {
+    public Long getNextValidAllocatedSerial(NumberingFormat numberingFormat) {
         Long newSerial = numberingFormat.getLastAllocatedSerial() + 1;
         List<NumberingFormatInterval> numberingFormatIntervals = this.numberingFormatIntervalRepository.findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(numberingFormat.getId(), newSerial);
         for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {

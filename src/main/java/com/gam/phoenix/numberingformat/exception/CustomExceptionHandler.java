@@ -1,6 +1,7 @@
 package com.gam.phoenix.numberingformat.exception;
 
 import com.gam.phoenix.numberingformat.TimePicker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,21 +23,13 @@ import java.util.logging.Logger;
  **/
 
 @ControllerAdvice
+@Slf4j
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity globalExceptionHandler(Exception ex, WebRequest request) {
+    public ResponseEntity<String> globalExceptionHandler(Exception ex, WebRequest request) {
         ErrorResponse errorDetails = new ErrorResponse(TimePicker.getCurrentTime(), ex.getMessage(), request.getDescription(false));
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getContextPath() + " raised " + ex, ex);
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(RecordNotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(RecordNotFoundException ex, WebRequest request) {
-        List<String> details = new ArrayList<>();
-        details.add(ex.getLocalizedMessage());
-        ErrorResponse error = new ErrorResponse(TimePicker.getCurrentTime(), ex.getMessage(), request.getDescription(false));
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getContextPath() + " raised " + ex, ex);
-        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorDetails.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -46,6 +39,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             details.add(error.getDefaultMessage());
         }
         ErrorResponse error = new ErrorResponse(TimePicker.getCurrentTime(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

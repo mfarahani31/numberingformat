@@ -101,7 +101,7 @@ class NumberingFormatIntegrationTest {
     @DisplayName("given getNumberingFormatByFormatAndUsage when numberingFormat not exist then throws exception")
     public void given_getNextSerial_when_usage_and_format_are_inValid_then_throws_exception() throws BusinessException {
 
-        doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextAllocatedSerial(any(NumberingFormat.class));
+        doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextValidAllocatedSerial(any(NumberingFormat.class));
 
         doThrow(BusinessException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
@@ -133,7 +133,7 @@ class NumberingFormatIntegrationTest {
     public void given_getNextSerial_when_usage_and_format_are_valid_then_return_nextSerial() throws BusinessException {
 
         doReturn(Optional.of(MotherObject.getAnyValidNumberingFormat())).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
-        doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextAllocatedSerial(any(NumberingFormat.class));
+        doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextValidAllocatedSerial(any(NumberingFormat.class));
 
         ResponseEntity<Long> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/next", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), Long.class);
 
@@ -147,7 +147,7 @@ class NumberingFormatIntegrationTest {
     @DisplayName("given saveNumberFormat when numberingFormat is valid then return numberingFormat")
     public void given_saveNumberFormat_when_numberingFormat_is_valid_then_return_numberingFormat() throws BusinessException {
 
-        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).saveNumberFormat(any(NumberingFormat.class));
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).saveNumberingFormat(any(NumberingFormat.class));
         //String expected = om.writeValueAsString(MotherObject.getAnyValidNumberingFormat());
 
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL, HttpMethod.POST, MotherObject.getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormat(), String.class);
@@ -155,7 +155,7 @@ class NumberingFormatIntegrationTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         //assertEquals(MotherObject.getAnyValidNumberingFormat(), response.getBody());
 
-        verify(numberingFormatService, times(1)).saveNumberFormat(any(NumberingFormat.class));
+        verify(numberingFormatService, times(1)).saveNumberingFormat(any(NumberingFormat.class));
     }
 
     // todo ; debug this test

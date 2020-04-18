@@ -38,7 +38,7 @@ public class NumberingFormatController {
 
     @PostMapping
     public ResponseEntity<NumberingFormat> saveNumberFormat(@Valid @RequestBody NumberingFormatDto numberingFormatDto) throws BusinessException {
-        NumberingFormat numberingFormat = this.numberingFormatService.saveNumberFormat(numberingFormatMapper.dtoToEntity(numberingFormatDto));
+        NumberingFormat numberingFormat = this.numberingFormatService.saveNumberingFormat(numberingFormatMapper.dtoToEntity(numberingFormatDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormat);
     }
 
@@ -63,11 +63,11 @@ public class NumberingFormatController {
     @GetMapping("/{usage}/{format}/next")
     public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
         Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)));
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextAllocatedSerial(numberingFormat.get()));
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextValidAllocatedSerial(numberingFormat.get()));
     }
 
     @PatchMapping("/{usage}/{format}/serial/increase")
-    public ResponseEntity<String> increaseSerial(@PathVariable String usage, @PathVariable String format, @Valid @RequestBody(required = false) IncreaseRequestModel increaseRequestModel) {
+    public ResponseEntity<String> increaseSerial(@PathVariable String usage, @PathVariable String format, @Valid @RequestBody(required = false) IncreaseRequestModel increaseRequestModel) throws BusinessException {
         String serial = numberingFormatService.increaseLastAllocatedSerialByOne(usage, format, increaseRequestModel);
         return ResponseEntity.status(HttpStatus.OK).body(serial);
     }

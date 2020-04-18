@@ -56,13 +56,12 @@ public class NumberingFormatService {
         }
     }
 
-    // Todo : method does not throw exception
-    public void deleteNumberingFormat(String usage, String format) throws BusinessException {
-        try {
-            this.numberingFormatRepository.deleteNumberingFormatByNumberUsageAndNumberFormat(usage, format);
-        } catch (Exception e) {
+    public Long deleteNumberingFormat(String usage, String format) throws BusinessException {
+        Long deletedRows = this.numberingFormatRepository.deleteNumberingFormatByNumberUsageAndNumberFormat(usage, format);
+        if (deletedRows == 0)
             throw new BusinessException(ErrorMessages.NOT_EXIST);
-        }
+        else
+            return deletedRows;
     }
 
     public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel increaseRequestModel) throws BusinessException {

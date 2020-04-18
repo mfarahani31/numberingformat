@@ -21,7 +21,7 @@ public interface NumberingFormatRepository extends JpaRepository<NumberingFormat
 
     @Transactional
     @Modifying
-    void deleteNumberingFormatByNumberUsageAndNumberFormat(@Param("usage") String usage,
+    Long deleteNumberingFormatByNumberUsageAndNumberFormat(@Param("usage") String usage,
                                                            @Param("format") String format);
 
 

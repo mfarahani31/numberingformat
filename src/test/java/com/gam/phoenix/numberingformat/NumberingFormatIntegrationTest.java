@@ -92,7 +92,6 @@ class NumberingFormatIntegrationTest {
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/current", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
 
         verify(numberingFormatService, times(1)).findByUsageAndFormat(anyString(), anyString());
     }
@@ -108,7 +107,6 @@ class NumberingFormatIntegrationTest {
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/next", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
 
         verify(numberingFormatService, times(1)).findByUsageAndFormat(anyString(), anyString());
     }

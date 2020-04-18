@@ -48,7 +48,7 @@ public class MotherObject {
 
     public static HttpEntity<String> getValidHttpEntityWithHeaderUsername() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("username", "username");
+        headers.set("username", "admin");
         return new HttpEntity<>(null, headers);
     }
 

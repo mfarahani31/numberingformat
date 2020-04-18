@@ -159,22 +159,22 @@ class NumberingFormatIntegrationTest {
     // todo ; debug this test
     @Test
     @DisplayName("given increaseSerial when usage and format are valid then return nextValidSerial")
-    public void given_increaseSerial_when_usage_and_format_are_valid_then_return_nextValidSerial() {
-        ResponseEntity<Long> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/serial/increase", HttpMethod.PATCH, MotherObject.getValidHttpEntityWithHeaderUsername(), Long.class);
+    public void given_increaseSerial_when_usage_and_format_are_valid_then_return_nextValidSerial() throws BusinessException {
+        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/serial/increase", HttpMethod.PATCH, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        //assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial(), response.getBody());
-        //verify(numberingFormatService, times(1)).increaseLastAllocatedSerialByOne(anyString(), anyString(),anyLong(),anyString(),any(NumberingFormat.class));
+        //assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial().toString(), response.getBody());
+        //verify(numberingFormatService, times(1)).increaseLastAllocatedSerialByOne(anyString(), anyString(),any(IncreaseRequestModel.class));
     }
 
     @Test
     @DisplayName("given deleteNumberFormat when usage and format are valid then delete numbering format")
     public void given_deleteNumberFormat_when_usage_and_format_are_valid_then_delete_numbering_format() throws BusinessException {
 
-        doNothing().when(numberingFormatService).deleteNumberingFormat("test1", "test1");
+        doReturn(MotherObject.getAnyValidNumberingFormat().getId()).when(numberingFormatService).deleteNumberingFormat("test1", "test1");
 
-        ResponseEntity responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), ResponseEntity.class);
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), Long.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 

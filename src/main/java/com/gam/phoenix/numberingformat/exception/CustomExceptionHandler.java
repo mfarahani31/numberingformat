@@ -26,19 +26,19 @@ import java.util.logging.Logger;
 @Slf4j
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> globalExceptionHandler(Exception ex, WebRequest request) {
+    public ResponseEntity globalExceptionHandler(Exception ex, WebRequest request) {
         ErrorResponse errorDetails = new ErrorResponse(TimePicker.getCurrentTime(), ex.getMessage(), request.getDescription(false));
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getContextPath() + " raised " + ex, ex);
-        return new ResponseEntity<>(errorDetails.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(RecordNotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(RecordNotFoundException ex, WebRequest request) {
+    public final ResponseEntity handleUserNotFoundException(RecordNotFoundException ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse(TimePicker.getCurrentTime(), ex.getMessage(), request.getDescription(false));
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getContextPath() + " raised " + ex, ex);
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
     }
 
 

@@ -1,5 +1,6 @@
 package com.gam.phoenix.numberingformat;
 
+import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.model.dto.NumberingFormatDto;
@@ -20,6 +21,10 @@ public class MotherObject {
                 300L,
                 301L,
                 null);
+    }
+
+    public static IncreaseRequestModel getAnyValidIncreaseRequestModel() {
+        return new IncreaseRequestModel(3L, "Serial");
     }
 
     public static NumberingFormatDto getAnyValidNumberingFormatDto() {

@@ -48,7 +48,7 @@ public class NumberingFormatService {
     }
 
 
-    public List<NumberingFormat> findAllNumberFormats() throws BusinessException {
+    public List<NumberingFormat> findAllNumberingFormats() throws BusinessException {
         try {
             return this.numberingFormatRepository.findAll();
         } catch (Exception e) {

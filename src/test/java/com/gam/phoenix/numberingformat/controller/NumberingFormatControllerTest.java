@@ -1,57 +1,42 @@
-//package com.gam.phoenix.numberingformat.controller;
-//
-//import com.gam.phoenix.numberingformat.MotherObject;
-//import com.gam.phoenix.numberingformat.model.NumberingFormat;
-//import com.gam.phoenix.numberingformat.service.NumberingFormatService;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.junit.runner.RunWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.MediaType;
-//import org.springframework.test.context.junit4.SpringRunner;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-//import org.springframework.web.client.HttpServerErrorException;
-//
-//import java.util.ArrayList;
-//import java.util.Collections;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-//
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
-//@AutoConfigureMockMvc
-//class NumberingFormatControllerTest {
-//    @MockBean
-//    NumberingFormatService numberingFormatService;
-//    TestMapperUtil testMapperUtil = new TestMapperUtil();
-//    @Autowired
-//    private MockMvc mockMvc;
-//
-//    @Test
-//    public void contextLoads() {
-//        assertNotNull(numberingFormatService);
-//        assertNotNull(mockMvc);
-//    }
-//
+package com.gam.phoenix.numberingformat.controller;
+
+import com.gam.phoenix.numberingformat.service.NumberingFormatService;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+class NumberingFormatControllerTest {
+    @MockBean
+    NumberingFormatService numberingFormatService;
+    TestMapperUtil testMapperUtil = new TestMapperUtil();
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    public void contextLoads() {
+        assertNotNull(numberingFormatService);
+        assertNotNull(mockMvc);
+    }
+
 //    @Test
 //    @DisplayName("given getAllNumberingFormats when numberingFormat exist then returns numberingFormats")
 //    public void given_getAllNumberingFormats_when_numberingFormat_exist_then_returns_numberingFormats() throws Exception {
 //        List<NumberingFormat> numberingFormat = Collections.singletonList(MotherObject.getAnyValidNumberingFormat());
 //
-//        doReturn(new ArrayList<NumberingFormat>()).when(numberingFormatService).findAllNumberFormats();
+//        doReturn(new ArrayList<NumberingFormat>()).when(numberingFormatService).findAllNumberingFormats();
 //
 //        // when + then
-//        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL)
+//        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL,MotherObject.getValidHttpEntityWithHeaderUsername())
 //                .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().isOk());
 //        //.andExpect(jsonPath("$[0].numberUsage", is(MotherObject.getAnyValidNumberingFormat().getNumberUsage())))
@@ -59,10 +44,11 @@
 //        //.andExpect(jsonPath("$[0].startAt", is(MotherObject.getAnyValidNumberingFormat().getStartAt())))
 //        //.andExpect(jsonPath("$[0].lastAllocatedSerial", is(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial())));
 //
-//        verify(numberingFormatService, times(1)).findAllNumberFormats();
+//        verify(numberingFormatService, times(1)).findAllNumberingFormats();
 //        verifyNoMoreInteractions(numberingFormatService);
 //    }
-//
+}
+
 //    @Test
 //    @DisplayName("given getNumberFormatByUsageAndFormat when usage and format are valid then returns numberingFormat")
 //    public void given_getNumberFormatByUsageAndFormat_when_usage_and_format_are_valid_then_returns_numberingFormats() throws Exception {

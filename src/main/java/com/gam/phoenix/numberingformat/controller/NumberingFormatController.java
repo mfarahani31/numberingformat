@@ -44,7 +44,7 @@ public class NumberingFormatController {
 
     @GetMapping
     public ResponseEntity<List<NumberingFormat>> getAllNumberingFormats() throws BusinessException {
-        List<NumberingFormat> allNumberFormats = numberingFormatService.findAllNumberFormats();
+        List<NumberingFormat> allNumberFormats = numberingFormatService.findAllNumberingFormats();
         return ResponseEntity.ok(allNumberFormats);
     }
 

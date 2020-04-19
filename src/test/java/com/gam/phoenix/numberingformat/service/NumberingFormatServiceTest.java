@@ -2,6 +2,7 @@ package com.gam.phoenix.numberingformat.service;
 
 import com.gam.phoenix.numberingformat.MotherObject;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
+import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpServerErrorException;
 
@@ -60,8 +62,8 @@ class NumberingFormatServiceTest {
     @Test
     @DisplayName("given findByNumberUsageAndNumberFormat when usage and format are invalid then throws exception")
     public void given_findByNumberUsageAndNumberFormat_when_usage_and_format_are_invalid_then_throws_exception() {
-        doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
-        assertThrows(BusinessException.class, () -> numberingFormatService.findByUsageAndFormat("invalidUsage", "invalidFormat"));
+        doThrow(RecordNotFoundException.class).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+        assertThrows(RecordNotFoundException.class, () -> numberingFormatService.findByUsageAndFormat("invalidUsage", "invalidFormat"));
     }
 
     @Test
@@ -78,7 +80,7 @@ class NumberingFormatServiceTest {
     @Test
     @DisplayName("given saveNumberFormat when numberingFormat is not valid then return error")
     public void given_saveNumberFormat_when_numberingFormat_is_not_valid_then_return_error() {
-        doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).save(any(NumberingFormat.class));
+        doThrow(DataIntegrityViolationException.class).when(numberingFormatRepository).save(any(NumberingFormat.class));
         assertThrows(BusinessException.class, () -> numberingFormatService.saveNumberingFormat(MotherObject.getAnyValidNumberingFormat()));
     }
 
@@ -92,13 +94,6 @@ class NumberingFormatServiceTest {
         List<NumberingFormat> actualNumberingFormats = numberingFormatService.findAllNumberingFormats();
         //then
         assertEquals(expectedNumberingFormats, actualNumberingFormats);
-    }
-
-    @Test
-    @DisplayName("given findAllNumberingFormats when numberingFormat not exist then throws exception")
-    public void given_findAllNumberingFormats_when_numberingFormat_not_exist_then_throws_exception() {
-        doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR)).when(numberingFormatRepository).findAll();
-        assertThrows(BusinessException.class, () -> numberingFormatService.findAllNumberingFormats());
     }
 
     @Test

@@ -69,7 +69,7 @@ class NumberingFormatIntervalIntegrationTest {
 
     @Test
     @DisplayName("given deleteNumberFormatInterval when numberingFormatId is valid then delete numberingFormatInterval")
-    public void given_deleteNumberFormat_when_numberingFormatId_is_valid_then_delete_numberingFormatInterval() throws BusinessException {
+    public void given_deleteNumberFormat_when_numberingFormatId_is_valid_then_delete_numberingFormatInterval() {
 
         //doNothing().when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
@@ -82,11 +82,11 @@ class NumberingFormatIntervalIntegrationTest {
 
     @Test
     @DisplayName("given deleteNumberFormatInterval when numberingFormatInterval not exist then throws exception")
-    public void given_deleteNumberFormat_when_numberingFormat_not_exist_then_throws_exception() throws BusinessException {
-        doThrow(BusinessException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
+    public void given_deleteNumberFormat_when_numberingFormat_not_exist_then_throws_exception() {
+        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
         restTemplate.delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), ResponseEntity.class);
-        assertThrows(BusinessException.class, () -> numberingFormatIntervalService.deleteNumberingFormatInterval(anyLong(), anyLong()));
+        assertThrows(RecordNotFoundException.class, () -> numberingFormatIntervalService.deleteNumberingFormatInterval(anyLong(), anyLong()));
     }
 
     @Test

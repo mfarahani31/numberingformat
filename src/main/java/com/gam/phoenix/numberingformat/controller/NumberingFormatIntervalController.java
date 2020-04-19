@@ -45,7 +45,7 @@ public class NumberingFormatIntervalController {
     }
 
     @DeleteMapping("/id/{numberingFormatId}/reserved-intervals/{reservedIntervalId}")
-    public void deleteNumberingFormatInterval(@PathVariable Long numberingFormatId, @PathVariable Long reservedIntervalId) throws BusinessException {
+    public void deleteNumberingFormatInterval(@PathVariable Long numberingFormatId, @PathVariable Long reservedIntervalId) {
         this.numberingFormatIntervalService.deleteNumberingFormatInterval(numberingFormatId, reservedIntervalId);
     }
 }

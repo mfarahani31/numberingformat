@@ -23,8 +23,12 @@ public class MotherObject {
                 null);
     }
 
-    public static IncreaseRequestModel getAnyValidIncreaseRequestModel() {
+    public static IncreaseRequestModel getAnyValidIncreaseRequestModelWithReturnTypeSerial() {
         return new IncreaseRequestModel(3L, "Serial");
+    }
+
+    public static IncreaseRequestModel getAnyValidIncreaseRequestModelWithReturnTypeFull() {
+        return new IncreaseRequestModel(3L, "Full");
     }
 
     public static NumberingFormatDto getAnyValidNumberingFormatDto() {

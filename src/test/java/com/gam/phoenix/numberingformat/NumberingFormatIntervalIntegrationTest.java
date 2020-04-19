@@ -3,6 +3,7 @@ package com.gam.phoenix.numberingformat;
 
 import com.gam.phoenix.numberingformat.controller.NumberingFormatController;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
+import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.service.NumberingFormatIntervalService;
 import org.junit.Before;
@@ -55,7 +56,7 @@ class NumberingFormatIntervalIntegrationTest {
 
     @Test
     @DisplayName("given saveNumberFormatInterval when numberingFormatId and inputValues are valid then return numberingFormatInterval")
-    public void given_saveNumberFormatInterval_when_numberingFormatId_and_inputValues_are_valid_then_return_numberingFormatInterval() throws BusinessException {
+    public void given_saveNumberFormatInterval_when_numberingFormatId_and_inputValues_are_valid_then_return_numberingFormatInterval() {
 
         doReturn(MotherObject.getAnyValidNumberingFormatInterval()).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
 
@@ -72,7 +73,7 @@ class NumberingFormatIntervalIntegrationTest {
 
         //doNothing().when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
-        ResponseEntity responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), ResponseEntity.class);
+        ResponseEntity<?> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), ResponseEntity.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -90,13 +91,11 @@ class NumberingFormatIntervalIntegrationTest {
 
     @Test
     @DisplayName("given saveNumberFormatInterval when numberingFormatId and inputValues are inValid then throws Exception")
-    public void given_saveNumberFormatInterval_when_numberingFormatId_and_inputValues_are_inValid_then_throws_exception() throws BusinessException {
-        doThrow(BusinessException.class).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
+    public void given_saveNumberFormatInterval_when_numberingFormatId_and_inputValues_are_inValid_then_throws_exception() {
+        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
 
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/55/reserved-intervals", HttpMethod.POST, MotherObject.getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormatInterval(), String.class);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-
-        //assertThrows(BusinessException.class, () -> numberingFormatIntervalService.saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class)));
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -114,6 +113,24 @@ class NumberingFormatIntervalIntegrationTest {
         //assertEquals(MotherObject.getAnyValidNumberingFormatInterval().toString(), response.getBody());
         verify(numberingFormatIntervalService, times(1)).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
     }
+//    @Test
+//    @DisplayName("given getAllNumberingFormatIntervalsByNumberingFormatId when usage and format are valid then return numberingFormat")
+//    public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_and_requestParam_are_sent_then_return_numberingFormatInterval() throws BusinessException {
+//        List<NumberingFormatInterval> numberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+//
+//        doReturn(numberingFormatIntervals).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), anyLong());
+//        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://127.0.0.1:8080"+NumberingFormatController.NUMBERING_FORMAT_URL+"/id/1/reserved-intervals")
+//                .queryParam("justApplicableIntervals", true)
+//                .queryParam("serial", 5L);
+//
+//
+//        ResponseEntity<String> response = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
+//        //assertEquals(MotherObject.getAnyValidNumberingFormatInterval().toString(), response.getBody());
+//        verify(numberingFormatIntervalService, times(1)).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
+//    }
 
     @Test
     @DisplayName("given getAllNumberingFormatIntervalsByNumberingFormatId when usage and format are valid then throws exception")
@@ -125,6 +142,4 @@ class NumberingFormatIntervalIntegrationTest {
 
         assertThrows(BusinessException.class, () -> numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any()));
     }
-
-
 }

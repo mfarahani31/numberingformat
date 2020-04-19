@@ -17,7 +17,6 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,19 +42,19 @@ class NumberingFormatServiceTest {
 
     @Test
     @DisplayName("given findByNumberUsageAndNumberFormat when usage and format are valid then returns numberingFormat")
-    public void given_findByUsageAndFormat_when_usage_and_format_are_valid_then_returns_numberingFormat() throws BusinessException {
+    public void given_findByUsageAndFormat_when_usage_and_format_are_valid_then_returns_numberingFormat() {
 
         //given
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
 
         //when
-        Optional<NumberingFormat> numberingFormatOptional = numberingFormatService.findByUsageAndFormat("test1", "test1");
+        NumberingFormat numberingFormat = numberingFormatService.findByUsageAndFormat("test1", "test1");
 
         //then
-        assertEquals(numberingFormatOptional.get().getLastAllocatedSerial(), MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial());
-        assertEquals(numberingFormatOptional.get().getStartAt(), MotherObject.getAnyValidNumberingFormat().getStartAt());
-        assertEquals(numberingFormatOptional.get().getNumberFormat(), MotherObject.getAnyValidNumberingFormat().getNumberFormat());
-        assertEquals(numberingFormatOptional.get().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberUsage());
+        assertEquals(numberingFormat.getLastAllocatedSerial(), MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial());
+        assertEquals(numberingFormat.getStartAt(), MotherObject.getAnyValidNumberingFormat().getStartAt());
+        assertEquals(numberingFormat.getNumberFormat(), MotherObject.getAnyValidNumberingFormat().getNumberFormat());
+        assertEquals(numberingFormat.getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberUsage());
     }
 
     @Test
@@ -85,7 +84,7 @@ class NumberingFormatServiceTest {
 
     @Test
     @DisplayName("given findAllNumberingFormats when numberingFormat exist then returns numberingFormats")
-    public void given_findAllNumberingFormats_when_numberingFormat_exist_then_returns_numberingFormat() throws BusinessException {
+    public void given_findAllNumberingFormats_when_numberingFormat_exist_then_returns_numberingFormat() {
         //given
         List<NumberingFormat> expectedNumberingFormats = Collections.singletonList(MotherObject.getAnyValidNumberingFormat());
         doReturn(expectedNumberingFormats).when(numberingFormatRepository).findAll();
@@ -104,7 +103,7 @@ class NumberingFormatServiceTest {
 
     @Test
     @DisplayName("given deleteNumberingFormat when usage and format are valid then delete numberingFormat")
-    public void given_deleteNumberingFormat_when_usage_and_format_are_valid_then_delete_numberingFormat() throws BusinessException {
+    public void given_deleteNumberingFormat_when_usage_and_format_are_valid_then_delete_numberingFormat() {
         doReturn(MotherObject.getAnyValidNumberingFormat().getId()).when(numberingFormatRepository).deleteNumberingFormatByNumberUsageAndNumberFormat(anyString(), anyString());
         numberingFormatService.deleteNumberingFormat("test1", "test1");
         verify(numberingFormatRepository, times(1)).deleteNumberingFormatByNumberUsageAndNumberFormat(anyString(), anyString());

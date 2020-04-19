@@ -1,6 +1,5 @@
 package com.gam.phoenix.numberingformat.controller;
 
-import com.gam.phoenix.numberingformat.constants.ErrorMessages;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -37,33 +35,33 @@ public class NumberingFormatController {
     }
 
     @PostMapping
-    public ResponseEntity<NumberingFormat> saveNumberFormat(@Valid @RequestBody NumberingFormatDto numberingFormatDto) throws BusinessException {
+    public ResponseEntity<NumberingFormat> saveNumberingFormat(@Valid @RequestBody NumberingFormatDto numberingFormatDto) throws BusinessException {
         NumberingFormat numberingFormat = this.numberingFormatService.saveNumberingFormat(numberingFormatMapper.dtoToEntity(numberingFormatDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormat);
     }
 
     @GetMapping
-    public ResponseEntity<List<NumberingFormat>> getAllNumberingFormats() throws BusinessException {
-        List<NumberingFormat> allNumberFormats = numberingFormatService.findAllNumberingFormats();
+    public ResponseEntity<List<NumberingFormat>> getAllNumberingFormats() {
+        List<NumberingFormat> allNumberFormats = this.numberingFormatService.findAllNumberingFormats();
         return ResponseEntity.ok(allNumberFormats);
     }
 
     @GetMapping("/{usage}/{format}")
-    public ResponseEntity<NumberingFormat> getNumberFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)));
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.get());
+    public ResponseEntity<NumberingFormat> getNumberingFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) {
+        NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat);
     }
 
     @GetMapping("/{usage}/{format}/current")
-    public ResponseEntity<Long> getCurrentSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)));
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.get().getLastAllocatedSerial());
+    public ResponseEntity<Long> getCurrentSerial(@PathVariable String usage, @PathVariable String format) {
+        NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial());
     }
 
     @GetMapping("/{usage}/{format}/next")
-    public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) throws BusinessException {
-        Optional<NumberingFormat> numberingFormat = Optional.of(this.numberingFormatService.findByUsageAndFormat(usage, format).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST)));
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextValidAllocatedSerial(numberingFormat.get()));
+    public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) {
+        NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
+        return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextValidAllocatedSerial(numberingFormat));
     }
 
     @PatchMapping("/{usage}/{format}/serial/increase")
@@ -73,7 +71,7 @@ public class NumberingFormatController {
     }
 
     @DeleteMapping("/{usage}/{format}")
-    public ResponseEntity<Long> deleteNumberFormat(@PathVariable String usage, @PathVariable String format) throws BusinessException {
+    public ResponseEntity<Long> deleteNumberingFormat(@PathVariable String usage, @PathVariable String format) {
         return ResponseEntity.status(HttpStatus.OK).body(this.numberingFormatService.deleteNumberingFormat(usage, format));
     }
 }

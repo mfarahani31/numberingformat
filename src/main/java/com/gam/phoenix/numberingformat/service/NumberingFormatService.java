@@ -2,16 +2,17 @@ package com.gam.phoenix.numberingformat.service;
 
 import com.gam.phoenix.numberingformat.constants.ErrorMessages;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
+import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatIntervalRepository;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -32,39 +33,36 @@ public class NumberingFormatService {
 
     public NumberingFormat saveNumberingFormat(NumberingFormat numberingFormat) throws BusinessException {
         try {
-            numberingFormat.setLastAllocatedSerial(decreaseStartAtByOneForLastAllocatedSerial(numberingFormat.getStartAt()));
+            numberingFormat.setLastAllocatedSerial(this.decreaseStartAtByOneForLastAllocatedSerial(numberingFormat.getStartAt()));
             return this.numberingFormatRepository.save(numberingFormat);
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             throw new BusinessException(ErrorMessages.DUPLICATE_NUMBERFORMAT);
         }
     }
 
-    public Optional<NumberingFormat> findByUsageAndFormat(String usage, String format) throws BusinessException {
-        try {
-            return Optional.of(this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format));
-        } catch (Exception e) {
-            throw new BusinessException(ErrorMessages.NOT_EXIST);
-        }
+    public NumberingFormat findByUsageAndFormat(String usage, String format) {
+        NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
+        if (numberingFormat == null)
+            throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
+        else
+            return numberingFormat;
     }
 
 
-    public List<NumberingFormat> findAllNumberingFormats() throws BusinessException {
-        try {
-            return this.numberingFormatRepository.findAll();
-        } catch (Exception e) {
-            throw new BusinessException(ErrorMessages.NOT_EXIST);
-        }
+    public List<NumberingFormat> findAllNumberingFormats() {
+        return this.numberingFormatRepository.findAll();
     }
 
-    public Long deleteNumberingFormat(String usage, String format) throws BusinessException {
+    public Long deleteNumberingFormat(String usage, String format) {
         Long deletedRows = this.numberingFormatRepository.deleteNumberingFormatByNumberUsageAndNumberFormat(usage, format);
         if (deletedRows == 0)
-            throw new BusinessException(ErrorMessages.NOT_EXIST);
+            throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
         else
             return deletedRows;
     }
 
-    public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel increaseRequestModel) throws BusinessException {
+    public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel
+            increaseRequestModel) throws BusinessException {
 
         NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
         if (numberingFormat == null) {

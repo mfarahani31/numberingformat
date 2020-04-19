@@ -2,6 +2,7 @@ package com.gam.phoenix.numberingformat.service;
 
 import com.gam.phoenix.numberingformat.constants.ErrorMessages;
 import com.gam.phoenix.numberingformat.exception.BusinessException;
+import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatIntervalRepository;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatRepository;
@@ -27,11 +28,11 @@ public class NumberingFormatIntervalService {
     }
 
 
-    public NumberingFormatInterval saveNumberingFormatInterval(Long numberingFormatId, NumberingFormatInterval numberingFormatInterval) throws BusinessException {
+    public NumberingFormatInterval saveNumberingFormatInterval(Long numberingFormatId, NumberingFormatInterval numberingFormatInterval) {
         return this.numberingFormatRepository.findById(numberingFormatId).map(numberingFormat -> {
             numberingFormatInterval.setNumberingFormat(numberingFormat);
             return numberingFormatIntervalRepository.save(numberingFormatInterval);
-        }).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST));
+        }).orElseThrow(() -> new RecordNotFoundException(ErrorMessages.NOT_EXIST));
     }
 
     public List<NumberingFormatInterval> getAllReservedIntervalsByNumberingFormatId(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) throws BusinessException {
@@ -42,11 +43,11 @@ public class NumberingFormatIntervalService {
         }
     }
 
-    public NumberingFormatInterval deleteNumberingFormatInterval(Long numberingFormatId, Long reservedIntervalId) throws BusinessException {
+    public NumberingFormatInterval deleteNumberingFormatInterval(Long numberingFormatId, Long reservedIntervalId) {
         return this.numberingFormatIntervalRepository.findByIdAndNumberingFormatId(reservedIntervalId, numberingFormatId).map(numberingFormatInterval -> {
             numberingFormatIntervalRepository.delete(numberingFormatInterval);
             return numberingFormatInterval;
-        }).orElseThrow(() -> new BusinessException(ErrorMessages.NOT_EXIST));
+        }).orElseThrow(() -> new RecordNotFoundException(ErrorMessages.NOT_EXIST));
     }
 
     private List<NumberingFormatInterval> retrieveNumberingFormatIntervalById(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) {

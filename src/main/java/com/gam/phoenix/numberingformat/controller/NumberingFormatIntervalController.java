@@ -34,14 +34,14 @@ public class NumberingFormatIntervalController {
     }
 
     @PostMapping("/id/{numberingFormatId}/reserved-intervals")
-    public ResponseEntity<NumberingFormatInterval> saveNumberFormatInterval(@PathVariable Long numberingFormatId, @Valid @RequestBody NumberingFormatIntervalDto numberingFormatIntervalDto) throws BusinessException {
+    public ResponseEntity<NumberingFormatInterval> saveNumberingFormatInterval(@PathVariable Long numberingFormatId, @Valid @RequestBody NumberingFormatIntervalDto numberingFormatIntervalDto) {
         NumberingFormatInterval numberingFormatInterval = this.numberingFormatIntervalService.saveNumberingFormatInterval(numberingFormatId, numberingFormatIntervalMapper.dtoToEntity(numberingFormatIntervalDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormatInterval);
     }
 
     @GetMapping("/id/{numberingFormatId}/reserved-intervals")
-    public ResponseEntity<List<NumberingFormatInterval>> getAllNumberingFormatIntervalsByNumberingFormatId(@PathVariable Long numberingFormatId, @RequestParam(required = false, defaultValue = "false") boolean justApplicable, @RequestParam(required = false) Long serial) throws BusinessException {
-        return ResponseEntity.ok(this.numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(numberingFormatId, justApplicable, serial));
+    public ResponseEntity<List<NumberingFormatInterval>> getAllNumberingFormatIntervalsByNumberingFormatId(@PathVariable Long numberingFormatId, @RequestParam(required = false, defaultValue = "false") boolean justApplicableIntervals, @RequestParam(required = false) Long serial) throws BusinessException {
+        return ResponseEntity.ok(this.numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(numberingFormatId, justApplicableIntervals, serial));
     }
 
     @DeleteMapping("/id/{numberingFormatId}/reserved-intervals/{reservedIntervalId}")

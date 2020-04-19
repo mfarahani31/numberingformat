@@ -15,9 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class NumberingFormatDto {
 
-
     private String numberUsage;
-
 
     private String numberFormat;
 

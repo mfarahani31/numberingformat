@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  **/
 
 @SpringBootApplication
-//@EnableJpaAuditing
 public class NumberingFormatApplication {
 
 

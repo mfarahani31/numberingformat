@@ -86,12 +86,10 @@ public class NumberingFormatService {
         }
     }
 
-    private void updateLastAllocatedSerial(Long newSerial, String usage, String format) throws BusinessException {
-        try {
-            this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorMessages.NOT_EXIST);
-        }
+    private void updateLastAllocatedSerial(Long newSerial, String usage, String format) {
+        Long updatedRows = this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
+        if (updatedRows <= 0)
+            throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
     }
 
     private NumberingFormat initializeNumberingFormatWithNewValues(String usage, String format) {
@@ -136,7 +134,7 @@ public class NumberingFormatService {
         List<NumberingFormatInterval> numberingFormatIntervals = this.numberingFormatIntervalRepository.findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(numberingFormat.getId(), newSerial);
         for (NumberingFormatInterval numberingFormatInterval : numberingFormatIntervals) {
             if (numberingFormatInterval.getReservedStart() <= newSerial && numberingFormatInterval.getReservedEnd() >= newSerial)
-                newSerial = numberingFormatInterval.getReservedEnd() + 1;
+                newSerial = numberingFormatInterval.getReservedEnd() + 1L;
         }
         return newSerial;
     }

@@ -24,11 +24,15 @@ public class MotherObject {
     }
 
     public static IncreaseRequestModel getAnyValidIncreaseRequestModelWithReturnTypeSerial() {
-        return new IncreaseRequestModel(3L, "Serial");
+        return new IncreaseRequestModel(2L, "Serial");
     }
 
     public static IncreaseRequestModel getAnyValidIncreaseRequestModelWithReturnTypeFull() {
         return new IncreaseRequestModel(3L, "Full");
+    }
+
+    public static IncreaseRequestModel getAnyValidIncreaseRequestModelWithNullValue() {
+        return null;
     }
 
     public static NumberingFormatDto getAnyValidNumberingFormatDto() {

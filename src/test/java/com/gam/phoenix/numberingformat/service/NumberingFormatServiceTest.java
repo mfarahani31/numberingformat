@@ -36,6 +36,7 @@ class NumberingFormatServiceTest {
     @Test
     public void testContext() {
         assertNotNull(numberingFormatRepository);
+        assertNotNull(numberingFormatIntervalRepository);
         assertNotNull(numberingFormatService);
     }
 
@@ -116,7 +117,7 @@ class NumberingFormatServiceTest {
         List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
         doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
 
-        doNothing().when(numberingFormatRepository).updateLastAllocatedSerial(anyLong(), anyString(), anyString());
+        doReturn(1L).when(numberingFormatRepository).updateLastAllocatedSerial(anyLong(), anyString(), anyString());
 
         String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeSerial());
 
@@ -132,12 +133,41 @@ class NumberingFormatServiceTest {
         List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
         doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
 
-        doNothing().when(numberingFormatRepository).updateLastAllocatedSerial(anyLong(), anyString(), anyString());
+        doReturn(1L).when(numberingFormatRepository).updateLastAllocatedSerial(anyLong(), anyString(), anyString());
 
         String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeFull());
 
         assertNotNull(numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeFull()));
-        //assertEquals(MotherObject.getAnyValidNumberingFormat().getNumberFormat()+MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial(), newSerial);
+        assertEquals(MotherObject.getAnyValidNumberingFormat().getNumberFormat() + (MotherObject.getAnyValidNumberingFormatInterval().getReservedEnd() + 1L), newSerial);
+    }
+
+    @Test
+    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are valid then return serial with format")
+    public void given_increaseLastAllocatedSerialByOne_when_numberingFormat_usage_and_format_are_valid_and_increaseRequestModel_is_null_then_return_serial_with_format() throws BusinessException {
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+
+        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+        doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
+
+        doReturn(1L).when(numberingFormatRepository).updateLastAllocatedSerial(anyLong(), anyString(), anyString());
+
+        String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithNullValue());
+
+        assertNotNull(numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeFull()));
+        assertEquals(MotherObject.getAnyValidNumberingFormatInterval().getReservedEnd() + 1L, Long.valueOf(newSerial));
+    }
+
+    @Test
+    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are valid and update did not work then throws exception")
+    public void given_increaseLastAllocatedSerialByOne_when_numberingFormat_usage_and_format_are_valid_and_update_did_not_work_then_throws_exception() {
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+
+        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+        doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
+
+        doReturn(0L).when(numberingFormatRepository).updateLastAllocatedSerial(anyLong(), anyString(), anyString());
+
+        assertThrows(RecordNotFoundException.class, () -> numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeFull()));
     }
 
     @Test

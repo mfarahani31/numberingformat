@@ -2,7 +2,6 @@ package com.gam.phoenix.numberingformat;
 
 
 import com.gam.phoenix.numberingformat.controller.NumberingFormatController;
-import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.service.NumberingFormatIntervalService;
@@ -100,7 +99,7 @@ class NumberingFormatIntervalIntegrationTest {
 
     @Test
     @DisplayName("given getAllNumberingFormatIntervalsByNumberingFormatId when usage and format are valid then return numberingFormat")
-    public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_then_return_numberingFormatInterval() throws BusinessException {
+    public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_then_return_numberingFormatInterval() {
 
         List<NumberingFormatInterval> numberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
 
@@ -134,12 +133,12 @@ class NumberingFormatIntervalIntegrationTest {
 
     @Test
     @DisplayName("given getAllNumberingFormatIntervalsByNumberingFormatId when usage and format are valid then throws exception")
-    public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_inValid_then_throws_exception() throws BusinessException {
-        doThrow(BusinessException.class).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
+    public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_inValid_then_throws_exception() {
+        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
 
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/55/reserved-intervals", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
-        assertThrows(BusinessException.class, () -> numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any()));
+        assertThrows(RecordNotFoundException.class, () -> numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any()));
     }
 }

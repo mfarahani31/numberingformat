@@ -1,7 +1,6 @@
 package com.gam.phoenix.numberingformat.service;
 
 import com.gam.phoenix.numberingformat.constants.ErrorMessages;
-import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatIntervalRepository;
@@ -35,12 +34,11 @@ public class NumberingFormatIntervalService {
         }).orElseThrow(() -> new RecordNotFoundException(ErrorMessages.NOT_EXIST));
     }
 
-    public List<NumberingFormatInterval> getAllReservedIntervalsByNumberingFormatId(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) throws BusinessException {
-        try {
-            return this.retrieveNumberingFormatIntervalById(numberingFormatId, justApplicableIntervals, serial);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorMessages.NOT_EXIST);
-        }
+    public List<NumberingFormatInterval> getAllReservedIntervalsByNumberingFormatId(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) {
+        List<NumberingFormatInterval> numberingFormatIntervals = this.retrieveNumberingFormatIntervalById(numberingFormatId, justApplicableIntervals, serial);
+        if (numberingFormatIntervals == null || numberingFormatIntervals.isEmpty())
+            throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
+        else return numberingFormatIntervals;
     }
 
     public NumberingFormatInterval deleteNumberingFormatInterval(Long numberingFormatId, Long reservedIntervalId) {
@@ -51,7 +49,7 @@ public class NumberingFormatIntervalService {
     }
 
     private List<NumberingFormatInterval> retrieveNumberingFormatIntervalById(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) {
-        if (!justApplicableIntervals) {
+        if (justApplicableIntervals.equals(false)) {
             return this.numberingFormatIntervalRepository.findByNumberingFormatId(numberingFormatId);
         } else if (serial != null) {
             return this.numberingFormatIntervalRepository.findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(numberingFormatId, serial);

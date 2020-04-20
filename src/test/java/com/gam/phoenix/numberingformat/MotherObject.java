@@ -50,9 +50,22 @@ public class MotherObject {
                 400L, null);
     }
 
+    public static NumberingFormatInterval getAnyValidNumberingFormatIntervalWithNumberinFormat() {
+
+        return new NumberingFormatInterval(1L,
+                300L,
+                400L,
+                MotherObject.getAnyValidNumberingFormat());
+    }
+
     public static Optional<NumberingFormat> getAnyOptionalOfValidNumberingFormat() {
 
         return Optional.of(getAnyValidNumberingFormat());
+    }
+
+    public static Optional<NumberingFormatInterval> getAnyOptionalOfValidNumberingFormatInterval() {
+
+        return Optional.of(getAnyValidNumberingFormatInterval());
     }
 
     public static Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {

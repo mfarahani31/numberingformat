@@ -64,7 +64,7 @@ class NumberingFormatIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode responseJson = objectMapper.readTree(response.getBody());
+        JsonNode responseJson = objectMapper.readTree(Objects.requireNonNull(response.getBody()));
 
         assertFalse(responseJson.isMissingNode());
         assertEquals("[]", responseJson.toString());

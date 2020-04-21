@@ -126,8 +126,7 @@ class NumberingFormatControllerTest {
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         // when + then
         this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/current").header("username", "username"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.numberUsage").value(MotherObject.getAnyValidNumberingFormat().getNumberUsage()));
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test

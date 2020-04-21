@@ -36,7 +36,7 @@ public class NumberingFormatService {
             numberingFormat.setLastAllocatedSerial(this.decreaseStartAtByOneForLastAllocatedSerial(numberingFormat.getStartAt()));
             return this.numberingFormatRepository.save(numberingFormat);
         } catch (DataIntegrityViolationException e) {
-            throw new BusinessException(ErrorMessages.DUPLICATE_NUMBERFORMAT);
+            throw new BusinessException(ErrorMessages.DUPLICATE_NUMBERINGFORMAT);
         }
     }
 
@@ -87,7 +87,7 @@ public class NumberingFormatService {
     }
 
     private void updateLastAllocatedSerial(Long newSerial, String usage, String format) {
-        Long updatedRows = this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
+        int updatedRows = this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
         if (updatedRows <= 0)
             throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
     }

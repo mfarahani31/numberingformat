@@ -8,6 +8,7 @@ import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatIntervalRepository;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatRepository;
+import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -76,14 +77,19 @@ public class NumberingFormatService {
             increaseRequestModel = initializeIncreaseRequestModel(increaseRequestModel);
             String newSerialWithProperFormat = generateSerialWithRequiredLength(increaseRequestModel.getSerialLength(), newSerial);
             String returnType = increaseRequestModel.getReturnType();
-            String result;
             assert returnType != null;
-            if (returnType.equals("Full"))
-                result = format + newSerialWithProperFormat;
-            else
-                result = newSerial.toString();
-            return result;
+            return specifyResultWithCertainLength(returnType, format, newSerialWithProperFormat, newSerial);
         }
+    }
+
+    private String specifyResultWithCertainLength(String returnType, String format, String newSerialWithProperFormat, Long newSerial) {
+        String result;
+        if (returnType.equals("Full"))
+            result = format + newSerialWithProperFormat;
+        else if (returnType.equals("Serial"))
+            result = newSerial.toString();
+        else throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
+        return result;
     }
 
     private void updateLastAllocatedSerial(Long newSerial, String usage, String format) {
@@ -119,7 +125,8 @@ public class NumberingFormatService {
     }
 
     private String addZeroAtBeginningOfSerial(Long serialLength, Long lastAllocatedSerial) {
-        String serialWithZeroAtBeginning = String.format("%0" + serialLength + "d", lastAllocatedSerial); // Like : 0009
+        String serialWithZeroAtBeginning = StringUtils.leftPad("" + lastAllocatedSerial, serialLength.intValue(), '0');
+
         if (serialWithZeroAtBeginning.length() > serialLength)
             return lastAllocatedSerial.toString();
         else return serialWithZeroAtBeginning;

@@ -112,24 +112,6 @@ class NumberingFormatIntervalIntegrationTest {
         //assertEquals(MotherObject.getAnyValidNumberingFormatInterval().toString(), response.getBody());
         verify(numberingFormatIntervalService, times(1)).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
     }
-//    @Test
-//    @DisplayName("given getAllNumberingFormatIntervalsByNumberingFormatId when usage and format are valid then return numberingFormat")
-//    public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_and_requestParam_are_sent_then_return_numberingFormatInterval() throws BusinessException {
-//        List<NumberingFormatInterval> numberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
-//
-//        doReturn(numberingFormatIntervals).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), anyLong());
-//        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://127.0.0.1:8080"+NumberingFormatController.NUMBERING_FORMAT_URL+"/id/1/reserved-intervals")
-//                .queryParam("justApplicableIntervals", true)
-//                .queryParam("serial", 5L);
-//
-//
-//        ResponseEntity<String> response = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
-//        //assertEquals(MotherObject.getAnyValidNumberingFormatInterval().toString(), response.getBody());
-//        verify(numberingFormatIntervalService, times(1)).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
-//    }
 
     @Test
     @DisplayName("given getAllNumberingFormatIntervalsByNumberingFormatId when usage and format are valid then throws exception")

@@ -1,7 +1,6 @@
 package com.gam.phoenix.numberingformat.controller;
 
 
-import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.model.dto.NumberingFormatIntervalDto;
 import com.gam.phoenix.numberingformat.model.dto.NumberingFormatIntervalMapper;
@@ -40,7 +39,7 @@ public class NumberingFormatIntervalController {
     }
 
     @GetMapping("/id/{numberingFormatId}/reserved-intervals")
-    public ResponseEntity<List<NumberingFormatInterval>> getAllNumberingFormatIntervalsByNumberingFormatId(@PathVariable Long numberingFormatId, @RequestParam(required = false, defaultValue = "false") boolean justApplicableIntervals, @RequestParam(required = false) Long serial) throws BusinessException {
+    public ResponseEntity<List<NumberingFormatInterval>> getAllNumberingFormatIntervalsByNumberingFormatId(@PathVariable Long numberingFormatId, @RequestParam(required = false, defaultValue = "false") boolean justApplicableIntervals, @RequestParam(required = false) Long serial) {
         return ResponseEntity.ok(this.numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(numberingFormatId, justApplicableIntervals, serial));
     }
 

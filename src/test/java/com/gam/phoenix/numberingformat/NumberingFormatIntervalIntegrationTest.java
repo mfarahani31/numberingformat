@@ -72,7 +72,7 @@ class NumberingFormatIntervalIntegrationTest {
 
         //doNothing().when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
-        ResponseEntity<?> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), ResponseEntity.class);
+        ResponseEntity<?> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), ResponseEntity.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -84,7 +84,7 @@ class NumberingFormatIntervalIntegrationTest {
     public void given_deleteNumberFormat_when_numberingFormat_not_exist_then_throws_exception() {
         doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
-        restTemplate.delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), ResponseEntity.class);
+        restTemplate.delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), ResponseEntity.class);
         assertThrows(RecordNotFoundException.class, () -> numberingFormatIntervalService.deleteNumberingFormatInterval(anyLong(), anyLong()));
     }
 
@@ -105,7 +105,7 @@ class NumberingFormatIntervalIntegrationTest {
 
         doReturn(numberingFormatIntervals).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), anyLong());
 
-        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
+        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
@@ -118,7 +118,7 @@ class NumberingFormatIntervalIntegrationTest {
     public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_inValid_then_throws_exception() {
         doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
 
-        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/55/reserved-intervals", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
+        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/55/reserved-intervals", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         assertThrows(RecordNotFoundException.class, () -> numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any()));

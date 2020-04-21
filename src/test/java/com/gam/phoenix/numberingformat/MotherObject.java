@@ -72,9 +72,15 @@ public class MotherObject {
         return startAt - 1;
     }
 
-    public static HttpEntity<String> getValidHttpEntityWithHeaderUsername() {
+    public static HttpEntity<String> getValidHttpEntityWithHeaderUsernameAdmin() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("username", "admin");
+        return new HttpEntity<>(null, headers);
+    }
+
+    public static HttpEntity<String> getValidHttpEntityWithHeaderUsernameUsername() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("username", "USERNAME");
         return new HttpEntity<>(null, headers);
     }
 
@@ -82,6 +88,12 @@ public class MotherObject {
         HttpHeaders headers = new HttpHeaders();
         headers.set("username", "username");
         return new HttpEntity<>(MotherObject.getAnyValidNumberingFormat(), headers);
+    }
+
+    public static HttpEntity<NumberingFormatDto> getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormatDto() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("username", "username");
+        return new HttpEntity<>(MotherObject.getAnyValidNumberingFormatDto(), headers);
     }
 
     public static HttpEntity<NumberingFormatInterval> getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormatInterval() {

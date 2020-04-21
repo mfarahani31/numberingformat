@@ -59,7 +59,7 @@ class NumberingFormatIntegrationTest {
     @Test
     @DisplayName("given getAllNumberingFormat when numberingFormat exists then return all numberingFormats")
     public void given_getAllNumberingFormat_when_numberingFormat_exists_then_return_all_numberingFormats() throws IOException {
-        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL, HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
+        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL, HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -76,7 +76,7 @@ class NumberingFormatIntegrationTest {
 
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
-        ResponseEntity<Long> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/current", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), Long.class);
+        ResponseEntity<Long> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/current", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), Long.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -89,7 +89,7 @@ class NumberingFormatIntegrationTest {
     public void given_getCurrentSerial_when_usage_and_format_are_invalid_throws_exception() {
         doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
-        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/current", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
+        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/current", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
@@ -104,7 +104,7 @@ class NumberingFormatIntegrationTest {
 
         doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
-        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/next", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
+        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/next", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
@@ -117,7 +117,7 @@ class NumberingFormatIntegrationTest {
 
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
-        ResponseEntity<NumberingFormat> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), NumberingFormat.class);
+        ResponseEntity<NumberingFormat> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), NumberingFormat.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
@@ -134,7 +134,7 @@ class NumberingFormatIntegrationTest {
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextValidAllocatedSerial(any(NumberingFormat.class));
 
-        ResponseEntity<Long> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/next", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), Long.class);
+        ResponseEntity<Long> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/next", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), Long.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -177,7 +177,7 @@ class NumberingFormatIntegrationTest {
     @Test
     @DisplayName("given increaseSerial when usage and format are valid then return nextValidSerial")
     public void given_increaseSerial_when_usage_and_format_are_valid_then_return_nextValidSerial() {
-        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/serial/increase", HttpMethod.PATCH, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
+        ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/serial/increase", HttpMethod.PATCH, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -191,7 +191,7 @@ class NumberingFormatIntegrationTest {
 
         doReturn(MotherObject.getAnyValidNumberingFormat().getId()).when(numberingFormatService).deleteNumberingFormat("test1", "test1");
 
-        ResponseEntity<Long> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), Long.class);
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), Long.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -203,7 +203,7 @@ class NumberingFormatIntegrationTest {
     public void given_getNumberingFormatByFormatAndUsage_when_numberingFormat_not_exist_then_return_error() {
         doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
-        ResponseEntity<NumberingFormat> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsername(), NumberingFormat.class);
+        ResponseEntity<NumberingFormat> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), NumberingFormat.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
@@ -216,7 +216,7 @@ class NumberingFormatIntegrationTest {
     public void given_deleteNumberFormat_when_numberingFormat_not_exist_then_returns_500() {
         doThrow(RecordNotFoundException.class).when(numberingFormatService).deleteNumberingFormat(anyString(), anyString());
 
-        ResponseEntity<String> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsername(), String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
         assertTrue(responseEntity.getStatusCode().is4xxClientError());
         assertThrows(RecordNotFoundException.class, () -> numberingFormatService.deleteNumberingFormat(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat()));
         verify(numberingFormatService, times(2)).deleteNumberingFormat(anyString(), anyString());

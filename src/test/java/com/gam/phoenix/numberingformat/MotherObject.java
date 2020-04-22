@@ -35,6 +35,10 @@ public class MotherObject {
         return null;
     }
 
+    public static IncreaseRequestModel getAnyValidIncreaseRequestModelWithInvalidValue() {
+        return new IncreaseRequestModel(3L, "invalidType");
+    }
+
     public static NumberingFormatDto getAnyValidNumberingFormatDto() {
         return new NumberingFormatDto("test1",
                 "test1",

@@ -88,7 +88,8 @@ public class NumberingFormatService {
             result = format + newSerialWithProperFormat;
         else if (returnType.equals("Serial"))
             result = newSerial.toString();
-        else throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
+        else
+            result = newSerial.toString();
         return result;
     }
 

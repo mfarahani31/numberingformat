@@ -23,6 +23,16 @@ public class MotherObject {
                 null);
     }
 
+    public static NumberingFormat getAnyValidNumberingFormatStartSerialFrom600() {
+
+        return new NumberingFormat(1L,
+                "test1",
+                "test1",
+                600L,
+                601L,
+                null);
+    }
+
     public static IncreaseRequestModel getAnyValidIncreaseRequestModelWithReturnTypeSerial() {
         return new IncreaseRequestModel(2L, "Serial");
     }
@@ -51,7 +61,7 @@ public class MotherObject {
 
         return new NumberingFormatInterval(1L,
                 300L,
-                400L, null);
+                400L, getAnyValidNumberingFormat());
     }
 
     public static NumberingFormatInterval getAnyValidNumberingFormatIntervalBetween1000And1200() {
@@ -61,7 +71,7 @@ public class MotherObject {
                 1200L, null);
     }
 
-    public static NumberingFormatInterval getAnyValidNumberingFormatIntervalWithNumberinFormat() {
+    public static NumberingFormatInterval getAnyValidNumberingFormatIntervalWithNumberingFormat() {
 
         return new NumberingFormatInterval(1L,
                 300L,

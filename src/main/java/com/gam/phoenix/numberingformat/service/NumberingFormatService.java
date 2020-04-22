@@ -86,8 +86,6 @@ public class NumberingFormatService {
         String result;
         if (returnType.equals("Full"))
             result = format + newSerialWithProperFormat;
-        else if (returnType.equals("Serial"))
-            result = newSerial.toString();
         else
             result = newSerial.toString();
         return result;

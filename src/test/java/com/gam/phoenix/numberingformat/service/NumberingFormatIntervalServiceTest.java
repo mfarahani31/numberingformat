@@ -128,7 +128,7 @@ class NumberingFormatIntervalServiceTest {
         doReturn(MotherObject.getAnyOptionalOfValidNumberingFormat()).when(numberingFormatRepository).findById(anyLong());
         doReturn(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400()).when(numberingFormatIntervalRepository).save(any(NumberingFormatInterval.class));
         //when
-        NumberingFormatInterval numberingFormatInterval = this.numberingFormatIntervalService.saveNumberingFormatInterval(MotherObject.getAnyValidNumberingFormat().getId(), MotherObject.getAnyValidNumberingFormatIntervalWithNumberinFormat());
+        NumberingFormatInterval numberingFormatInterval = this.numberingFormatIntervalService.saveNumberingFormatInterval(MotherObject.getAnyValidNumberingFormat().getId(), MotherObject.getAnyValidNumberingFormatIntervalWithNumberingFormat());
         //then
         assertEquals(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400(), numberingFormatInterval);
     }
@@ -150,7 +150,7 @@ class NumberingFormatIntervalServiceTest {
         doReturn(MotherObject.getAnyOptionalOfValidNumberingFormatInterval()).when(numberingFormatIntervalRepository).findByIdAndNumberingFormatId(anyLong(), anyLong());
         doNothing().when(numberingFormatIntervalRepository).delete(any(NumberingFormatInterval.class));
         //when
-        NumberingFormatInterval numberingFormatInterval = this.numberingFormatIntervalService.deleteNumberingFormatInterval(MotherObject.getAnyValidNumberingFormat().getId(), MotherObject.getAnyValidNumberingFormatIntervalWithNumberinFormat().getId());
+        NumberingFormatInterval numberingFormatInterval = this.numberingFormatIntervalService.deleteNumberingFormatInterval(MotherObject.getAnyValidNumberingFormat().getId(), MotherObject.getAnyValidNumberingFormatIntervalWithNumberingFormat().getId());
         //then
         assertEquals(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400(), numberingFormatInterval);
     }

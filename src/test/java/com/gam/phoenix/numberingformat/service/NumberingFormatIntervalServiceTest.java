@@ -45,7 +45,7 @@ class NumberingFormatIntervalServiceTest {
     @Test
     @DisplayName("given findByNumberUsageAndNumberFormat when usage and format are valid then returns numberingFormat")
     public void given_findByUsageAndFormat_when_usage_and_format_are_valid_then_returns_numberingFormat() {
-        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
 
         //given
         doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findByNumberingFormatId(anyLong());
@@ -63,7 +63,7 @@ class NumberingFormatIntervalServiceTest {
     @Test
     @DisplayName("given getAllReservedIntervalsByNumberingFormatId when usage and format are valid then returns numberingFormatIntervals")
     public void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_and_justApplicableIntervals_is_true_then_returns_numberingFormatIntervals() {
-        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
 
         //given
         doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
@@ -80,7 +80,7 @@ class NumberingFormatIntervalServiceTest {
     @Test
     @DisplayName("given getAllReservedIntervalsByNumberingFormatId when usage and format are valid then returns numberingFormatIntervals")
     public void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_and_serial_is_null_then_returns_numberingFormatIntervals() {
-        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
         //List<NumberingFormatInterval> numberingFormatIntervals = new ArrayList<>();
         //given
         doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
@@ -126,11 +126,11 @@ class NumberingFormatIntervalServiceTest {
     public void given_saveNumberingFormatInterval_when_numberingFormatId_and_numberingFormatInterval_are_valid_then_returns_numberingFormatInterval() {
         //given
         doReturn(MotherObject.getAnyOptionalOfValidNumberingFormat()).when(numberingFormatRepository).findById(anyLong());
-        doReturn(MotherObject.getAnyValidNumberingFormatInterval()).when(numberingFormatIntervalRepository).save(any(NumberingFormatInterval.class));
+        doReturn(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400()).when(numberingFormatIntervalRepository).save(any(NumberingFormatInterval.class));
         //when
         NumberingFormatInterval numberingFormatInterval = this.numberingFormatIntervalService.saveNumberingFormatInterval(MotherObject.getAnyValidNumberingFormat().getId(), MotherObject.getAnyValidNumberingFormatIntervalWithNumberinFormat());
         //then
-        assertEquals(MotherObject.getAnyValidNumberingFormatInterval(), numberingFormatInterval);
+        assertEquals(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400(), numberingFormatInterval);
     }
 
     @Test
@@ -152,7 +152,7 @@ class NumberingFormatIntervalServiceTest {
         //when
         NumberingFormatInterval numberingFormatInterval = this.numberingFormatIntervalService.deleteNumberingFormatInterval(MotherObject.getAnyValidNumberingFormat().getId(), MotherObject.getAnyValidNumberingFormatIntervalWithNumberinFormat().getId());
         //then
-        assertEquals(MotherObject.getAnyValidNumberingFormatInterval(), numberingFormatInterval);
+        assertEquals(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400(), numberingFormatInterval);
     }
 
 }

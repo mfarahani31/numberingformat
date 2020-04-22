@@ -47,11 +47,18 @@ public class MotherObject {
                 null);
     }
 
-    public static NumberingFormatInterval getAnyValidNumberingFormatInterval() {
+    public static NumberingFormatInterval getAnyValidNumberingFormatIntervalBetween300And400() {
 
         return new NumberingFormatInterval(1L,
                 300L,
                 400L, null);
+    }
+
+    public static NumberingFormatInterval getAnyValidNumberingFormatIntervalBetween1000And1200() {
+
+        return new NumberingFormatInterval(1L,
+                1000L,
+                1200L, null);
     }
 
     public static NumberingFormatInterval getAnyValidNumberingFormatIntervalWithNumberinFormat() {
@@ -69,7 +76,7 @@ public class MotherObject {
 
     public static Optional<NumberingFormatInterval> getAnyOptionalOfValidNumberingFormatInterval() {
 
-        return Optional.of(getAnyValidNumberingFormatInterval());
+        return Optional.of(getAnyValidNumberingFormatIntervalBetween300And400());
     }
 
     public static Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
@@ -103,7 +110,7 @@ public class MotherObject {
     public static HttpEntity<NumberingFormatInterval> getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormatInterval() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("username", "username");
-        return new HttpEntity<>(MotherObject.getAnyValidNumberingFormatInterval(), headers);
+        return new HttpEntity<>(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400(), headers);
     }
 
 

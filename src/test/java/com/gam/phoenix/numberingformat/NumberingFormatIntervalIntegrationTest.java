@@ -57,7 +57,7 @@ class NumberingFormatIntervalIntegrationTest {
     @DisplayName("given saveNumberFormatInterval when numberingFormatId and inputValues are valid then return numberingFormatInterval")
     public void given_saveNumberFormatInterval_when_numberingFormatId_and_inputValues_are_valid_then_return_numberingFormatInterval() {
 
-        doReturn(MotherObject.getAnyValidNumberingFormatInterval()).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
+        doReturn(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400()).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
 
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals", HttpMethod.POST, MotherObject.getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormatInterval(), String.class);
 
@@ -101,7 +101,7 @@ class NumberingFormatIntervalIntegrationTest {
     @DisplayName("given getAllNumberingFormatIntervalsByNumberingFormatId when usage and format are valid then return numberingFormat")
     public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_then_return_numberingFormatInterval() {
 
-        List<NumberingFormatInterval> numberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+        List<NumberingFormatInterval> numberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
 
         doReturn(numberingFormatIntervals).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), anyLong());
 

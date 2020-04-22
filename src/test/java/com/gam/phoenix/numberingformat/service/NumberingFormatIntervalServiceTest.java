@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,7 +81,7 @@ class NumberingFormatIntervalServiceTest {
     @DisplayName("given getAllReservedIntervalsByNumberingFormatId when usage and format are valid then returns numberingFormatIntervals")
     public void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_and_serial_is_null_then_returns_numberingFormatIntervals() {
         List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
-
+        //List<NumberingFormatInterval> numberingFormatIntervals = new ArrayList<>();
         //given
         doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
 
@@ -91,6 +92,23 @@ class NumberingFormatIntervalServiceTest {
         assertEquals(expectedNumberingFormatIntervals.get(0).getReservedStart(), numberingFormatIntervals.get(0).getReservedStart());
         assertEquals(expectedNumberingFormatIntervals.get(0).getReservedEnd(), numberingFormatIntervals.get(0).getReservedEnd());
         assertEquals(expectedNumberingFormatIntervals.get(0).getNumberingFormat(), numberingFormatIntervals.get(0).getNumberingFormat());
+    }
+
+    @Test
+    @DisplayName("given getAllReservedIntervalsByNumberingFormatId when usage and format are valid then returns numberingFormatIntervals")
+    public void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_and_serial_is_null_then_return_404() {
+        //List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+        List<NumberingFormatInterval> expectedNumberingFormatIntervals = new ArrayList<>();
+
+        //given
+        //given
+        doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
+        doReturn(null).when(numberingFormatIntervalRepository).findByNumberingFormatId(anyLong());
+
+
+        //then
+        assertThrows(RecordNotFoundException.class, () -> numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(MotherObject.getAnyValidNumberingFormat().getId(), false, 1L));
+
     }
 
     @Test

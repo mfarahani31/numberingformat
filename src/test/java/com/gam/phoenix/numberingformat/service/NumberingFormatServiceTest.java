@@ -206,4 +206,16 @@ class NumberingFormatServiceTest {
         assertNotNull(numberingFormatService.getNextValidAllocatedSerial(MotherObject.getAnyValidNumberingFormat()));
         assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1, nextAllocatedSerial);
     }
+
+    @Test
+    @DisplayName("given getNextAllocatedSerial when numberingFormat is valid then return nextAllocatedSerial")
+    public void given_getNextAllocatedSerial_when_numberingFormat_is_valid_and_interval_exists_then_return_nextAllocatedSerial() {
+        List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
+
+        doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(MotherObject.getAnyValidNumberingFormat().getId(), MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1);
+        Long nextAllocatedSerial = numberingFormatService.getNextValidAllocatedSerial(MotherObject.getAnyValidNumberingFormat());
+
+        assertNotNull(numberingFormatService.getNextValidAllocatedSerial(MotherObject.getAnyValidNumberingFormat()));
+        assertEquals(MotherObject.getAnyValidNumberingFormatInterval().getReservedEnd() + 1, nextAllocatedSerial);
+    }
 }

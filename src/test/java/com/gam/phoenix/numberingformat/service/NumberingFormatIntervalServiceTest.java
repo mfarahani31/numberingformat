@@ -97,7 +97,6 @@ class NumberingFormatIntervalServiceTest {
     @Test
     @DisplayName("given getAllReservedIntervalsByNumberingFormatId when usage and format are valid then returns numberingFormatIntervals")
     public void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_and_serial_is_null_then_return_404() {
-        //List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatInterval());
         List<NumberingFormatInterval> expectedNumberingFormatIntervals = new ArrayList<>();
 
         //given

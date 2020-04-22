@@ -36,7 +36,7 @@ public class NumberingFormatIntervalService {
 
     public List<NumberingFormatInterval> getAllReservedIntervalsByNumberingFormatId(Long numberingFormatId, Boolean justApplicableIntervals, Long serial) {
         List<NumberingFormatInterval> numberingFormatIntervals = this.retrieveNumberingFormatIntervalById(numberingFormatId, justApplicableIntervals, serial);
-        if (numberingFormatIntervals == null || numberingFormatIntervals.isEmpty())
+        if (numberingFormatIntervals == null)
             throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
         else return numberingFormatIntervals;
     }

@@ -248,7 +248,7 @@ class NumberingFormatServiceTest {
     @DisplayName("given getNextAllocatedSerial when numberingFormat is valid then return nextAllocatedSerial")
     public void given_getNextAllocatedSerial_when_numberingFormat_is_valid_and_serial_is_greater_than_range_then_return_nextAllocatedSerial() {
         List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
-
+        MotherObject.getAnyValidNumberingFormat().setLastAllocatedSerial(350L);
         doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(MotherObject.getAnyValidNumberingFormat().getId(), MotherObject.getAnyValidNumberingFormatStartSerialFrom600().getLastAllocatedSerial() + 1);
         Long nextAllocatedSerial = numberingFormatService.getNextValidAllocatedSerial(MotherObject.getAnyValidNumberingFormat());
 

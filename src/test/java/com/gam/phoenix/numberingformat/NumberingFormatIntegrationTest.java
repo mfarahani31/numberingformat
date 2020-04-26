@@ -7,6 +7,7 @@ import com.gam.phoenix.numberingformat.exception.BusinessException;
 import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
+import com.gam.phoenix.spring.commons.dal.DalException;
 import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,7 +73,7 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given getCurrentSerial when usage and format are valid then return current Serial")
-    public void given_getCurrentSerial_when_usage_and_format_are_valid_then_return_currentSerial() {
+    public void given_getCurrentSerial_when_usage_and_format_are_valid_then_return_currentSerial() throws DalException {
 
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
@@ -86,8 +87,8 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given getNumberingFormatByFormatAndUsage when numberingFormat not exist then return error")
-    public void given_getCurrentSerial_when_usage_and_format_are_invalid_throws_exception() {
-        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+    public void given_getCurrentSerial_when_usage_and_format_are_invalid_throws_exception() throws DalException {
+        doThrow(DalException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/current", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
 
@@ -98,7 +99,7 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given getNumberingFormatByFormatAndUsage when numberingFormat not exist then throws exception")
-    public void given_getNextSerial_when_usage_and_format_are_inValid_then_throws_exception() {
+    public void given_getNextSerial_when_usage_and_format_are_inValid_then_throws_exception() throws DalException {
 
         doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextValidAllocatedSerial(any(NumberingFormat.class));
 
@@ -113,7 +114,7 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given getNumberingFormatByFormatAndUsage when usage and format are valid then return numberingFormat")
-    public void given_getNumberingFormatByFormatAndUsage_when_usage_and_format_are_valid_then_return_numberingFormat() {
+    public void given_getNumberingFormatByFormatAndUsage_when_usage_and_format_are_valid_then_return_numberingFormat() throws DalException {
 
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
@@ -129,7 +130,7 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given getNextSerial when usage and format are valid then return next Serial")
-    public void given_getNextSerial_when_usage_and_format_are_valid_then_return_nextSerial() {
+    public void given_getNextSerial_when_usage_and_format_are_valid_then_return_nextSerial() throws DalException {
 
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextValidAllocatedSerial(any(NumberingFormat.class));
@@ -144,7 +145,7 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given saveNumberingFormat when numberingFormat is valid then return numberingFormat")
-    public void given_saveNumberingFormat_when_numberingFormat_is_valid_then_return_numberingFormat() throws BusinessException {
+    public void given_saveNumberingFormat_when_numberingFormat_is_valid_then_return_numberingFormat() throws DalException {
 
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).saveNumberingFormat(any(NumberingFormat.class));
 
@@ -161,8 +162,8 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given saveNumberingFormat when numberingFormat is valid then returns 500")
-    public void given_saveNumberingFormat_when_numberingFormat_is_Invalid_then_returns_500() throws BusinessException {
-        doThrow(BusinessException.class).when(numberingFormatService).saveNumberingFormat(any(NumberingFormat.class));
+    public void given_saveNumberingFormat_when_numberingFormat_is_Invalid_then_returns_500() throws DalException {
+        doThrow(DalException.class).when(numberingFormatService).saveNumberingFormat(any(NumberingFormat.class));
 
         ResponseEntity<NumberingFormat> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL, HttpMethod.POST, MotherObject.getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormat(), NumberingFormat.class);
 
@@ -187,7 +188,7 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given deleteNumberFormat when usage and format are valid then delete numbering format")
-    public void given_deleteNumberFormat_when_usage_and_format_are_valid_then_delete_numbering_format() {
+    public void given_deleteNumberFormat_when_usage_and_format_are_valid_then_delete_numbering_format() throws DalException {
 
         doReturn(MotherObject.getAnyValidNumberingFormat().getId()).when(numberingFormatService).deleteNumberingFormat("test1", "test1");
 
@@ -200,8 +201,8 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given getNumberingFormatByFormatAndUsage when numberingFormat not exist then return error")
-    public void given_getNumberingFormatByFormatAndUsage_when_numberingFormat_not_exist_then_return_error() {
-        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+    public void given_getNumberingFormatByFormatAndUsage_when_numberingFormat_not_exist_then_return_error() throws DalException {
+        doThrow(DalException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
         ResponseEntity<NumberingFormat> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), NumberingFormat.class);
 
@@ -213,8 +214,8 @@ class NumberingFormatIntegrationTest {
 
     @Test
     @DisplayName("given deleteNumberFormat when numberingFormat not exist then returns 500")
-    public void given_deleteNumberFormat_when_numberingFormat_not_exist_then_returns_500() {
-        doThrow(RecordNotFoundException.class).when(numberingFormatService).deleteNumberingFormat(anyString(), anyString());
+    public void given_deleteNumberFormat_when_numberingFormat_not_exist_then_returns_500() throws DalException {
+        doThrow(DalException.class).when(numberingFormatService).deleteNumberingFormat(anyString(), anyString());
 
         ResponseEntity<String> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
         assertTrue(responseEntity.getStatusCode().is4xxClientError());

@@ -1,13 +1,12 @@
 package com.gam.phoenix.numberingformat.service;
 
-import com.gam.phoenix.numberingformat.constants.ErrorMessages;
-import com.gam.phoenix.numberingformat.exception.BusinessException;
-import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
+import com.gam.phoenix.numberingformat.constants.ExceptionMessage;
 import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatIntervalRepository;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatRepository;
+import com.gam.phoenix.spring.commons.dal.DalException;
 import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,19 +31,19 @@ public class NumberingFormatService {
         this.numberingFormatIntervalRepository = numberingFormatIntervalRepository;
     }
 
-    public NumberingFormat saveNumberingFormat(NumberingFormat numberingFormat) throws BusinessException {
+    public NumberingFormat saveNumberingFormat(NumberingFormat numberingFormat) throws DalException {
         try {
             numberingFormat.setLastAllocatedSerial(this.decreaseStartAtByOneForLastAllocatedSerial(numberingFormat.getStartAt()));
             return this.numberingFormatRepository.save(numberingFormat);
         } catch (DataIntegrityViolationException e) {
-            throw new BusinessException(ErrorMessages.DUPLICATE_NUMBERINGFORMAT);
+            throw new DalException(ExceptionMessage.NUMBERING_FORMAT_DUPLICATION_EXCEPTION, ExceptionMessage.NUMBERING_FORMAT_DUPLICATION_EXCEPTION_MSG);
         }
     }
 
-    public NumberingFormat findByUsageAndFormat(String usage, String format) {
+    public NumberingFormat findByUsageAndFormat(String usage, String format) throws DalException {
         NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
         if (numberingFormat == null)
-            throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
+            throw new DalException(ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION, ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION_MSG);
         else
             return numberingFormat;
     }
@@ -54,16 +53,16 @@ public class NumberingFormatService {
         return this.numberingFormatRepository.findAll();
     }
 
-    public Long deleteNumberingFormat(String usage, String format) {
+    public Long deleteNumberingFormat(String usage, String format) throws DalException {
         Long deletedRows = this.numberingFormatRepository.deleteNumberingFormatByNumberUsageAndNumberFormat(usage, format);
         if (deletedRows == 0)
-            throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
+            throw new DalException(ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION, ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION_MSG);
         else
             return deletedRows;
     }
 
     public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel
-            increaseRequestModel) throws BusinessException {
+            increaseRequestModel) throws DalException {
 
         NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
         if (numberingFormat == null) {
@@ -91,10 +90,10 @@ public class NumberingFormatService {
         return result;
     }
 
-    private void updateLastAllocatedSerial(Long newSerial, String usage, String format) {
+    private void updateLastAllocatedSerial(Long newSerial, String usage, String format) throws DalException {
         int updatedRows = this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
         if (updatedRows <= 0)
-            throw new RecordNotFoundException(ErrorMessages.NOT_EXIST);
+            throw new DalException(ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION, ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION_MSG);
     }
 
     private NumberingFormat initializeNumberingFormatWithNewValues(String usage, String format) {

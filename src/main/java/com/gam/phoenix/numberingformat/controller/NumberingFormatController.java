@@ -1,19 +1,21 @@
 package com.gam.phoenix.numberingformat.controller;
 
-import com.gam.phoenix.numberingformat.exception.BusinessException;
+import com.gam.phoenix.numberingformat.controller.model.response.SerialResponse;
 import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.dto.NumberingFormatDto;
 import com.gam.phoenix.numberingformat.model.dto.NumberingFormatMapper;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
+import com.gam.phoenix.spring.commons.dal.DalException;
+import com.gam.phoenix.spring.commons.rest.model.response.ListRESTResponse;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 
 /**
@@ -22,6 +24,8 @@ import java.util.List;
 @RestController
 @Api(value = "NumberingFormat Service!!!")
 @RequestMapping(NumberingFormatController.NUMBERING_FORMAT_URL)
+@Slf4j
+@CrossOrigin
 public class NumberingFormatController {
     public static final String NUMBERING_FORMAT_URL = "/numbering-format/api/v1/numbering-formats";
 
@@ -35,43 +39,56 @@ public class NumberingFormatController {
     }
 
     @PostMapping
-    public ResponseEntity<NumberingFormat> saveNumberingFormat(@Valid @RequestBody NumberingFormatDto numberingFormatDto) throws BusinessException {
-        NumberingFormat numberingFormat = this.numberingFormatService.saveNumberingFormat(numberingFormatMapper.dtoToEntity(numberingFormatDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(numberingFormat);
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Create new NumberingFormat.")
+    public NumberingFormat saveNumberingFormat(@Valid @RequestBody NumberingFormatDto numberingFormatDto) throws DalException {
+        return this.numberingFormatService.saveNumberingFormat(numberingFormatMapper.dtoToEntity(numberingFormatDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<NumberingFormat>> getAllNumberingFormats() {
-        List<NumberingFormat> allNumberFormats = this.numberingFormatService.findAllNumberingFormats();
-        return ResponseEntity.ok(allNumberFormats);
+    @ApiOperation(value = "Return all numberingFormats")
+    @ResponseStatus(HttpStatus.OK)
+    public ListRESTResponse<NumberingFormat> getAllNumberingFormats() {
+        ListRESTResponse<NumberingFormat> numberingFormatListRESTResponse = new ListRESTResponse<>();
+        numberingFormatListRESTResponse.setRecords(numberingFormatService.findAllNumberingFormats());
+        return numberingFormatListRESTResponse;
     }
 
     @GetMapping("/{usage}/{format}")
-    public ResponseEntity<NumberingFormat> getNumberingFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) {
+    @ApiOperation(value = "Return the specified NumberingFormat")
+    @ResponseStatus(HttpStatus.OK)
+    public NumberingFormatDto getNumberingFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) throws DalException {
         NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat);
+        return numberingFormatMapper.entityToDto(numberingFormat);
     }
 
     @GetMapping("/{usage}/{format}/current")
-    public ResponseEntity<Long> getCurrentSerial(@PathVariable String usage, @PathVariable String format) {
+    @ApiOperation(value = "Return current serial of the specified NumberingFormat")
+    @ResponseStatus(HttpStatus.OK)
+    public SerialResponse getCurrentSerial(@PathVariable String usage, @PathVariable String format) throws DalException {
         NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormat.getLastAllocatedSerial());
+        return new SerialResponse(numberingFormat.getLastAllocatedSerial().toString());
     }
 
     @GetMapping("/{usage}/{format}/next")
-    public ResponseEntity<Long> getNextSerial(@PathVariable String usage, @PathVariable String format) {
+    @ApiOperation(value = "Return the next valid serial of specified NumberingFormat")
+    @ResponseStatus(HttpStatus.OK)
+    public SerialResponse getNextSerial(@PathVariable String usage, @PathVariable String format) throws DalException {
         NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
-        return ResponseEntity.status(HttpStatus.OK).body(numberingFormatService.getNextValidAllocatedSerial(numberingFormat));
+        return new SerialResponse(numberingFormatService.getNextValidAllocatedSerial(numberingFormat).toString());
     }
 
     @PatchMapping("/{usage}/{format}/serial/increase")
-    public ResponseEntity<String> increaseSerial(@PathVariable String usage, @PathVariable String format, @Valid @RequestBody(required = false) IncreaseRequestModel increaseRequestModel) throws BusinessException {
-        String serial = numberingFormatService.increaseLastAllocatedSerialByOne(usage, format, increaseRequestModel);
-        return ResponseEntity.status(HttpStatus.OK).body(serial);
+    @ApiOperation(value = "Increase the serial of specified NumberingFormat")
+    @ResponseStatus(HttpStatus.OK)
+    public SerialResponse increaseSerial(@PathVariable String usage, @PathVariable String format, @Valid @RequestBody(required = false) IncreaseRequestModel increaseRequestModel) throws DalException {
+        return new SerialResponse(numberingFormatService.increaseLastAllocatedSerialByOne(usage, format, increaseRequestModel));
     }
 
     @DeleteMapping("/{usage}/{format}")
-    public ResponseEntity<Long> deleteNumberingFormat(@PathVariable String usage, @PathVariable String format) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.numberingFormatService.deleteNumberingFormat(usage, format));
+    @ApiOperation(value = "Delete the specified NumberingFormat")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteNumberingFormat(@PathVariable String usage, @PathVariable String format) throws DalException {
+        this.numberingFormatService.deleteNumberingFormat(usage, format);
     }
 }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.gam.phoenix</groupId>
     <artifactId>numberingformat</artifactId>
-    <version>0.3.4</version>
+    <version>0.3.5</version>
     <name>numberingFormat</name>
     <description>Demo project for Spring Boot</description>
 
@@ -24,6 +24,9 @@
         <junit-platform.version>1.3.2</junit-platform.version>
         <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
+        <gam-spring-commons.version>2.1.7.5</gam-spring-commons.version>
+        <gam-phoenix-date-utils.version>1.0.1-SNAPSHOT</gam-phoenix-date-utils.version>
+
     </properties>
 
     <dependencies>
@@ -106,7 +109,21 @@
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.gam.phoenix</groupId>
+            <artifactId>gam-spring-commons-rest</artifactId>
+            <version>${gam-spring-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gam.phoenix</groupId>
+            <artifactId>gam-spring-commons-all</artifactId>
+            <version>2.1.7.4</version>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.gam.phoenix</groupId>-->
+        <!--            <artifactId>gam-phoenix-date-utils</artifactId>-->
+        <!--            <version>${gam-phoenix-date-utils.version}</version>-->
+        <!--        </dependency>-->
     </dependencies>
     <profiles>
         <profile>

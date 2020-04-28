@@ -1,10 +1,10 @@
 package com.gam.phoenix.numberingformat.controller;
 
 import com.gam.phoenix.numberingformat.MotherObject;
-import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.service.NumberingFormatIntervalService;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
+import com.gam.phoenix.spring.commons.dal.DalException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +71,7 @@ class NumberingFormatIntervalControllerTest {
     @DisplayName("given getAllReservedIntervalsByNumberingFormatId when numberingFormatId is inValid then returns 400")
     public void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_inValid_then_returns_400() throws Exception {
 
-        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), anyLong());
+        doThrow(DalException.class).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), anyLong());
 
         // when + then
         this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/invalidId/reserved-intervals")
@@ -103,7 +103,7 @@ class NumberingFormatIntervalControllerTest {
     @DisplayName("given saveNumberingFormatInterval when numberingFormat is valid then returns numberingFormat")
     public void given_saveNumberFormat_when_numberingFormatId_is_inValid_then_returns_numberingFormat() throws Exception {
         // given
-        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
+        doThrow(DalException.class).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
 
         String inputJson = testMapperUtil.mapToJson(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
 
@@ -133,7 +133,7 @@ class NumberingFormatIntervalControllerTest {
     @DisplayName("given deleteNumberingFormatInterval when numberingFormat is valid then return 404")
     public void given_deleteNumberingFormatInterval_when_numberingFormatId_is_inValid_then_return_404() throws Exception {
         // given
-        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
+        doThrow(DalException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
         this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/invalidId/reserved-intervals/nvalidId")
                 .header("username", "username")
@@ -146,7 +146,7 @@ class NumberingFormatIntervalControllerTest {
     @DisplayName("given deleteNumberingFormatInterval when numberingFormat is inValid and numberingFormatIntervalId is valid then return 404")
     public void given_deleteNumberingFormatInterval_when_numberingFormatId_is_inValid_and_numberingFormatIntervalId_is_valid_then_return_404() throws Exception {
         // given
-        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
+        doThrow(DalException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
         this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/invalidId")
                 .header("username", "username")

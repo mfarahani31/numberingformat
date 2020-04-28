@@ -3,7 +3,6 @@ package com.gam.phoenix.numberingformat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gam.phoenix.numberingformat.controller.NumberingFormatController;
-import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
 import com.gam.phoenix.spring.commons.dal.DalException;
@@ -101,7 +100,7 @@ class NumberingFormatIntegrationTest {
 
         doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextValidAllocatedSerial(any(NumberingFormat.class));
 
-        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+        doThrow(DalException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
 
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/next", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
 

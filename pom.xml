@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.gam.phoenix</groupId>
     <artifactId>numberingformat</artifactId>
-    <version>0.3.7</version>
+    <version>0.4.0</version>
     <name>numberingFormat</name>
     <description>Demo project for Spring Boot</description>
 
@@ -26,7 +26,6 @@
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
         <gam-spring-commons.version>2.1.7.5</gam-spring-commons.version>
         <gam-phoenix-date-utils.version>1.0.1-SNAPSHOT</gam-phoenix-date-utils.version>
-
     </properties>
 
     <dependencies>

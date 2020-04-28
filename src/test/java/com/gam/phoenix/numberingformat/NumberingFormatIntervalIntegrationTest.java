@@ -2,7 +2,6 @@ package com.gam.phoenix.numberingformat;
 
 
 import com.gam.phoenix.numberingformat.controller.NumberingFormatController;
-import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.service.NumberingFormatIntervalService;
 import com.gam.phoenix.spring.commons.dal.DalException;
@@ -71,7 +70,7 @@ class NumberingFormatIntervalIntegrationTest {
     @DisplayName("given deleteNumberFormatInterval when numberingFormatId is valid then delete numberingFormatInterval")
     public void given_deleteNumberFormat_when_numberingFormatId_is_valid_then_delete_numberingFormatInterval() throws DalException {
 
-        //doNothing().when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
+        //doReturn(NumberingFormatInterval.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
         ResponseEntity<?> responseEntity = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), ResponseEntity.class);
 
@@ -83,16 +82,16 @@ class NumberingFormatIntervalIntegrationTest {
     @Test
     @DisplayName("given deleteNumberFormatInterval when numberingFormatInterval not exist then throws exception")
     public void given_deleteNumberFormat_when_numberingFormat_not_exist_then_throws_exception() throws DalException {
-        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
+        doThrow(DalException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
         restTemplate.delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1", HttpMethod.DELETE, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), ResponseEntity.class);
-        assertThrows(RecordNotFoundException.class, () -> numberingFormatIntervalService.deleteNumberingFormatInterval(anyLong(), anyLong()));
+        assertThrows(DalException.class, () -> numberingFormatIntervalService.deleteNumberingFormatInterval(anyLong(), anyLong()));
     }
 
     @Test
     @DisplayName("given saveNumberFormatInterval when numberingFormatId and inputValues are inValid then throws Exception")
     public void given_saveNumberFormatInterval_when_numberingFormatId_and_inputValues_are_inValid_then_throws_exception() throws DalException {
-        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
+        doThrow(DalException.class).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
 
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/55/reserved-intervals", HttpMethod.POST, MotherObject.getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormatInterval(), String.class);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
@@ -117,11 +116,11 @@ class NumberingFormatIntervalIntegrationTest {
     @Test
     @DisplayName("given getAllNumberingFormatIntervalsByNumberingFormatId when usage and format are valid then throws exception")
     public void given_getAllNumberingFormatIntervalsByNumberingFormatId_when_numberingFormatId_is_inValid_then_throws_exception() throws DalException {
-        doThrow(RecordNotFoundException.class).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
+        doThrow(DalException.class).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any());
 
         ResponseEntity<String> response = restTemplate.exchange(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/55/reserved-intervals", HttpMethod.GET, MotherObject.getValidHttpEntityWithHeaderUsernameAdmin(), String.class);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
 
-        assertThrows(RecordNotFoundException.class, () -> numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any()));
+        assertThrows(DalException.class, () -> numberingFormatIntervalService.getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), any()));
     }
 }

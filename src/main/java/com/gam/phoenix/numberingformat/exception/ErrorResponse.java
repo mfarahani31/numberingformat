@@ -1,6 +1,7 @@
 package com.gam.phoenix.numberingformat.exception;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
 
@@ -10,7 +11,7 @@ import lombok.Getter;
 
 @Getter
 public class ErrorResponse {
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String timestamp;
     private String message;
     private String details;

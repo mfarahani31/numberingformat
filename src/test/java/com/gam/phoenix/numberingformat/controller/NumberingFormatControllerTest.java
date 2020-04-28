@@ -70,8 +70,7 @@ class NumberingFormatControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result.numberUsage").value("test1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result.numberFormat").value("test1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result.startAt").value(300))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result.lastAllocatedSerial").value(301));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.startAt").value(300));
     }
 
     @Test

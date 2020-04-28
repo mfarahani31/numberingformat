@@ -24,7 +24,6 @@ class NumberingFormatMapperTest {
         assertNotNull(numberingFormatDto);
         assertEquals(numberingFormatDto.getNumberFormat(), MotherObject.getAnyValidNumberingFormat().getNumberFormat());
         assertEquals(numberingFormatDto.getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberUsage());
-        assertEquals(numberingFormatDto.getLastAllocatedSerial(), MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial());
         assertEquals(numberingFormatDto.getStartAt(), MotherObject.getAnyValidNumberingFormat().getStartAt());
     }
 
@@ -36,7 +35,6 @@ class NumberingFormatMapperTest {
         assertNotNull(numberingFormat);
         assertEquals(numberingFormat.getNumberFormat(), MotherObject.getAnyValidNumberingFormatDto().getNumberFormat());
         assertEquals(numberingFormat.getNumberUsage(), MotherObject.getAnyValidNumberingFormatDto().getNumberUsage());
-        assertEquals(numberingFormat.getLastAllocatedSerial(), MotherObject.getAnyValidNumberingFormatDto().getLastAllocatedSerial());
         assertEquals(numberingFormat.getStartAt(), MotherObject.getAnyValidNumberingFormatDto().getStartAt());
     }
 }

@@ -1,6 +1,5 @@
 package com.gam.phoenix.numberingformat.model.dto;
 
-import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +16,4 @@ public class NumberingFormatIntervalDto {
 
     private Long reservedEnd;
 
-
-    private NumberingFormat numberingFormat;
 }

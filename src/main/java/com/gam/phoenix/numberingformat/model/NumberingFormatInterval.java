@@ -1,6 +1,7 @@
 package com.gam.phoenix.numberingformat.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gam.phoenix.spring.commons.dal.Auditable;
 import com.gam.phoenix.spring.commons.rest.model.response.RESTResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;

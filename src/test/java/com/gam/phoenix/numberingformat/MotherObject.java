@@ -52,9 +52,7 @@ public class MotherObject {
     public static NumberingFormatDto getAnyValidNumberingFormatDto() {
         return new NumberingFormatDto("test1",
                 "test1",
-                300L,
-                301L,
-                null);
+                300L);
     }
 
     public static NumberingFormatInterval getAnyValidNumberingFormatIntervalBetween300And400() {

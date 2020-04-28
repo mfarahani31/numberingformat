@@ -131,7 +131,10 @@ public class NumberingFormatService {
     }
 
     private Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
-        return startAt - 1;
+        if (startAt == 1)
+            return startAt;
+        else
+            return startAt - 1;
     }
 
     public Long getNextValidAllocatedSerial(NumberingFormat numberingFormat) {

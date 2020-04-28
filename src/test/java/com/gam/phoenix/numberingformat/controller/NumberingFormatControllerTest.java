@@ -78,7 +78,7 @@ class NumberingFormatControllerTest {
     @DisplayName("given getNumberFormatByUsageAndFormat when usage and format are invalid then throws exception")
     public void given_getNumberFormatByUsageAndFormat_when_usage_and_format_are_invalid_then_throws_exception() throws Exception {
         // given
-        doThrow(DalException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         // when + then
         this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat").header("username", "username"))
                 .andExpect(status().is5xxServerError());

@@ -2,8 +2,8 @@ package com.gam.phoenix.numberingformat.dto;
 
 import com.gam.phoenix.numberingformat.MotherObject;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
-import com.gam.phoenix.numberingformat.model.dto.NumberingFormatDto;
-import com.gam.phoenix.numberingformat.model.dto.NumberingFormatMapper;
+import com.gam.phoenix.numberingformat.model.mapper.dto.NumberingFormatDtoRequest;
+import com.gam.phoenix.numberingformat.model.mapper.dto.NumberingFormatMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -19,12 +19,12 @@ class NumberingFormatMapperTest {
     @Test
     public void shouldMapNumberingFormatToDto() {
         //when
-        NumberingFormatDto numberingFormatDto = NumberingFormatMapper.INSTANCE.entityToDto(MotherObject.getAnyValidNumberingFormat());
+        NumberingFormatDtoRequest numberingFormatDtoRequest = NumberingFormatMapper.INSTANCE.entityToDtoRequest(MotherObject.getAnyValidNumberingFormat());
         //then
-        assertNotNull(numberingFormatDto);
-        assertEquals(numberingFormatDto.getNumberFormat(), MotherObject.getAnyValidNumberingFormat().getNumberFormat());
-        assertEquals(numberingFormatDto.getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberUsage());
-        assertEquals(numberingFormatDto.getStartAt(), MotherObject.getAnyValidNumberingFormat().getStartAt());
+        assertNotNull(numberingFormatDtoRequest);
+        assertEquals(numberingFormatDtoRequest.getNumberFormat(), MotherObject.getAnyValidNumberingFormat().getNumberFormat());
+        assertEquals(numberingFormatDtoRequest.getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberUsage());
+        assertEquals(numberingFormatDtoRequest.getStartAt(), MotherObject.getAnyValidNumberingFormat().getStartAt());
     }
 
     @Test

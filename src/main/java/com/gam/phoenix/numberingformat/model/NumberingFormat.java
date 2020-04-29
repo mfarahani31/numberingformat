@@ -1,7 +1,6 @@
 package com.gam.phoenix.numberingformat.model;
 
 import com.gam.phoenix.spring.commons.dal.Auditable;
-import com.gam.phoenix.spring.commons.rest.model.response.RESTResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +30,7 @@ import java.util.List;
 @AuditTable("TB_NFM_NUMBERING_FORMAT_AUD")
 @Table(name = "TB_NFM_NUMBERING_FORMAT", uniqueConstraints = {@UniqueConstraint(columnNames = {"NUMBERING_USAGE", "NUMBERING_FORMAT"})})
 @SequenceGenerator(name = "SQ_NFM_NUMBERING_FORMAT", sequenceName = "SQ_NFM_NUMBERING_FORMAT", allocationSize = 1)
-public class NumberingFormat extends Auditable implements Serializable, RESTResponse {
+public class NumberingFormat extends Auditable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_NFM_NUMBERING_FORMAT")
     @Column(name = "NUMBERING_FORMAT_ID")

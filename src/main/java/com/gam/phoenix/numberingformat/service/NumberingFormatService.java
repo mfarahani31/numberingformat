@@ -11,6 +11,7 @@ import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class NumberingFormatService {
         return this.numberingFormatRepository.findAll();
     }
 
+    @Transactional
     public Long deleteNumberingFormat(String usage, String format) throws DalException {
         Long deletedRows = this.numberingFormatRepository.deleteNumberingFormatByNumberUsageAndNumberFormat(usage, format);
         if (deletedRows == 0)
@@ -61,6 +63,7 @@ public class NumberingFormatService {
             return deletedRows;
     }
 
+    @Transactional
     public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel
             increaseRequestModel) throws DalException {
 
@@ -71,7 +74,7 @@ public class NumberingFormatService {
             return numberingFormat.getLastAllocatedSerial().toString();
         } else {
             Long newSerial = this.getNextValidAllocatedSerial(numberingFormat);
-            this.updateLastAllocatedSerial(newSerial, usage, format);
+            this.updateLastAllocatedSerial(newSerial, numberingFormat);
 
             increaseRequestModel = initializeIncreaseRequestModel(increaseRequestModel);
             String newSerialWithProperFormat = generateSerialWithRequiredLength(increaseRequestModel.getSerialLength(), newSerial);
@@ -90,10 +93,14 @@ public class NumberingFormatService {
         return result;
     }
 
-    private void updateLastAllocatedSerial(Long newSerial, String usage, String format) throws DalException {
-        int updatedRows = this.numberingFormatRepository.updateLastAllocatedSerial(newSerial, usage, format);
-        if (updatedRows <= 0)
-            throw new DalException(ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION, ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION_MSG);
+    @Transactional
+    public void updateLastAllocatedSerial(Long newSerial, NumberingFormat numberingFormat) throws DalException {
+        try {
+            numberingFormat.setLastAllocatedSerial(newSerial);
+            this.numberingFormatRepository.save(numberingFormat);
+        } catch (DataIntegrityViolationException e) {
+            throw new DalException(ExceptionMessage.NUMBERING_FORMAT_UPDATE_SERIAL_ERROR, ExceptionMessage.NUMBERING_FORMAT_UPDATE_SERIAL_ERROR_MSG);
+        }
     }
 
     private NumberingFormat initializeNumberingFormatWithNewValues(String usage, String format) {

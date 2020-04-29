@@ -101,7 +101,8 @@ class NumberingFormatControllerTest {
 
         String inputJson = testMapperUtil.mapToJson(MotherObject.getAnyValidNumberingFormat());
 
-        this.mockMvc.perform(post(NumberingFormatController.NUMBERING_FORMAT_URL).header("username", "username")
+        this.mockMvc.perform(post(NumberingFormatController.NUMBERING_FORMAT_URL)
+                .header("username", "username")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result.numberUsage").value(MotherObject.getAnyValidNumberingFormat().getNumberUsage()))

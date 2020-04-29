@@ -1,4 +1,4 @@
-package com.gam.phoenix.numberingformat.model.dto;
+package com.gam.phoenix.numberingformat.model.mapper.dto;
 
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import org.mapstruct.Mapper;

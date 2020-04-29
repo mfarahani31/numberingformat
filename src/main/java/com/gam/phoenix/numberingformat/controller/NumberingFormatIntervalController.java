@@ -2,8 +2,8 @@ package com.gam.phoenix.numberingformat.controller;
 
 
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
-import com.gam.phoenix.numberingformat.model.dto.NumberingFormatIntervalDto;
-import com.gam.phoenix.numberingformat.model.dto.NumberingFormatIntervalMapper;
+import com.gam.phoenix.numberingformat.model.mapper.dto.NumberingFormatIntervalDto;
+import com.gam.phoenix.numberingformat.model.mapper.dto.NumberingFormatIntervalMapper;
 import com.gam.phoenix.numberingformat.service.NumberingFormatIntervalService;
 import com.gam.phoenix.spring.commons.dal.DalException;
 import com.gam.phoenix.spring.commons.rest.model.response.ListRESTResponse;
@@ -39,8 +39,8 @@ public class NumberingFormatIntervalController {
     @PostMapping("/id/{numberingFormatId}/reserved-intervals")
     @ApiOperation(value = "Create new NumberingFormatInterval.")
     @ResponseStatus(HttpStatus.CREATED)
-    public NumberingFormatInterval saveNumberingFormatInterval(@PathVariable Long numberingFormatId, @Valid @RequestBody NumberingFormatIntervalDto numberingFormatIntervalDto) throws DalException {
-        return this.numberingFormatIntervalService.saveNumberingFormatInterval(numberingFormatId, numberingFormatIntervalMapper.dtoToEntity(numberingFormatIntervalDto));
+    public NumberingFormatIntervalDto saveNumberingFormatInterval(@PathVariable Long numberingFormatId, @Valid @RequestBody NumberingFormatIntervalDto numberingFormatIntervalDto) throws DalException {
+        return numberingFormatIntervalMapper.entityToDto(this.numberingFormatIntervalService.saveNumberingFormatInterval(numberingFormatId, numberingFormatIntervalMapper.dtoToEntity(numberingFormatIntervalDto)));
     }
 
     @GetMapping("/id/{numberingFormatId}/reserved-intervals")

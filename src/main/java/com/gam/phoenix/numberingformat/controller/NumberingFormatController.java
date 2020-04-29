@@ -3,8 +3,9 @@ package com.gam.phoenix.numberingformat.controller;
 import com.gam.phoenix.numberingformat.controller.model.response.SerialResponse;
 import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
-import com.gam.phoenix.numberingformat.model.dto.NumberingFormatDto;
-import com.gam.phoenix.numberingformat.model.dto.NumberingFormatMapper;
+import com.gam.phoenix.numberingformat.model.mapper.dto.NumberingFormatDtoRequest;
+import com.gam.phoenix.numberingformat.model.mapper.dto.NumberingFormatDtoResponse;
+import com.gam.phoenix.numberingformat.model.mapper.dto.NumberingFormatMapper;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
 import com.gam.phoenix.spring.commons.dal.DalException;
 import com.gam.phoenix.spring.commons.rest.model.response.ListRESTResponse;
@@ -41,8 +42,8 @@ public class NumberingFormatController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create new NumberingFormat.")
-    public NumberingFormat saveNumberingFormat(@Valid @RequestBody NumberingFormatDto numberingFormatDto) throws DalException {
-        return this.numberingFormatService.saveNumberingFormat(numberingFormatMapper.dtoToEntity(numberingFormatDto));
+    public NumberingFormatDtoRequest saveNumberingFormat(@Valid @RequestBody NumberingFormatDtoRequest numberingFormatDtoRequest) throws DalException {
+        return numberingFormatMapper.entityToDtoRequest(this.numberingFormatService.saveNumberingFormat(numberingFormatMapper.dtoToEntity(numberingFormatDtoRequest)));
     }
 
     @GetMapping
@@ -57,9 +58,9 @@ public class NumberingFormatController {
     @GetMapping("/{usage}/{format}")
     @ApiOperation(value = "Return the specified NumberingFormat")
     @ResponseStatus(HttpStatus.OK)
-    public NumberingFormatDto getNumberingFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) throws DalException {
+    public NumberingFormatDtoResponse getNumberingFormatByUsageAndFormat(@PathVariable String usage, @PathVariable String format) throws DalException {
         NumberingFormat numberingFormat = this.numberingFormatService.findByUsageAndFormat(usage, format);
-        return numberingFormatMapper.entityToDto(numberingFormat);
+        return numberingFormatMapper.entityToDtoResponse(numberingFormat);
     }
 
     @GetMapping("/{usage}/{format}/current")

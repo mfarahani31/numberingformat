@@ -3,7 +3,7 @@ package com.gam.phoenix.numberingformat;
 import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
-import com.gam.phoenix.numberingformat.model.dto.NumberingFormatDto;
+import com.gam.phoenix.numberingformat.model.mapper.dto.NumberingFormatDtoRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
@@ -49,8 +49,8 @@ public class MotherObject {
         return new IncreaseRequestModel(3L, "invalidType");
     }
 
-    public static NumberingFormatDto getAnyValidNumberingFormatDto() {
-        return new NumberingFormatDto("test1",
+    public static NumberingFormatDtoRequest getAnyValidNumberingFormatDto() {
+        return new NumberingFormatDtoRequest("test1",
                 "test1",
                 300L);
     }
@@ -109,7 +109,7 @@ public class MotherObject {
         return new HttpEntity<>(MotherObject.getAnyValidNumberingFormat(), headers);
     }
 
-    public static HttpEntity<NumberingFormatDto> getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormatDto() {
+    public static HttpEntity<NumberingFormatDtoRequest> getValidHttpEntityWithHeaderUsernameAndBodyNumberingFormatDto() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("username", "username");
         return new HttpEntity<>(MotherObject.getAnyValidNumberingFormatDto(), headers);

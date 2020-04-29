@@ -1,5 +1,6 @@
-package com.gam.phoenix.numberingformat.model.dto;
+package com.gam.phoenix.numberingformat.model.mapper.dto;
 
+import com.gam.phoenix.spring.commons.rest.model.response.RESTResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NumberingFormatIntervalDto {
+public class NumberingFormatIntervalDto implements RESTResponse {
 
     private Long reservedStart;
 

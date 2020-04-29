@@ -27,7 +27,7 @@ import javax.validation.Valid;
 @Slf4j
 @CrossOrigin
 public class NumberingFormatController {
-    public static final String NUMBERING_FORMAT_URL = "/numbering-format/api/v1/numbering-formats";
+    public static final String NUMBERING_FORMAT_URL = "/api/v1/numbering-formats";
 
     private NumberingFormatService numberingFormatService;
     private NumberingFormatMapper numberingFormatMapper;

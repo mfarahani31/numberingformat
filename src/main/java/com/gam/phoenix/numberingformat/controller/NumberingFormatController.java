@@ -11,6 +11,7 @@ import com.gam.phoenix.spring.commons.dal.DalException;
 import com.gam.phoenix.spring.commons.rest.model.response.ListRESTResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,8 @@ public class NumberingFormatController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create new NumberingFormat.")
-    public NumberingFormatDtoRequest saveNumberingFormat(@Valid @RequestBody NumberingFormatDtoRequest numberingFormatDtoRequest) throws DalException {
+    public NumberingFormatDtoRequest saveNumberingFormat(@ApiParam("NumberFormat and NumberingUsage must not have '/' at the beginning")
+                                                         @Valid @RequestBody NumberingFormatDtoRequest numberingFormatDtoRequest) throws DalException {
         return numberingFormatMapper.entityToDtoRequest(this.numberingFormatService.saveNumberingFormat(numberingFormatMapper.dtoToEntity(numberingFormatDtoRequest)));
     }
 

@@ -171,16 +171,16 @@ class NumberingFormatServiceTest {
         assertThrows(DalException.class, () -> numberingFormatService.updateLastAllocatedSerial(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial(), MotherObject.getAnyValidNumberingFormat()));
     }
 
-    @Test
-    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are invalid then throws exception")
-    public void given_increaseLastAllocatedSerialByOne_when_usage_and_format_are_new_then_save_in_db_and_return_serial() throws DalException {
-        doReturn(null).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
-        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).save(any(NumberingFormat.class));
-
-        String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeSerial());
-
-        assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial().toString(), newSerial);
-    }
+//    @Test
+//    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are invalid then throws exception")
+//    public void given_increaseLastAllocatedSerialByOne_when_usage_and_format_are_new_then_save_in_db_and_return_serial() throws DalException {
+//        doReturn(null).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+//        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).save(any(NumberingFormat.class));
+//
+//        String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeSerial());
+//
+//        assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial().toString(), newSerial);
+//    }
 
     @Test
     @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are invalid then throws exception")

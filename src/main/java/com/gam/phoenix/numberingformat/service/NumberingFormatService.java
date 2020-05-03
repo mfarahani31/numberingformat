@@ -70,8 +70,9 @@ public class NumberingFormatService {
         NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
         if (numberingFormat == null) {
             numberingFormat = this.initializeNumberingFormatWithNewValues(usage, format);
-            numberingFormat = this.saveNumberingFormat(numberingFormat);
-            return numberingFormat.getLastAllocatedSerial().toString();
+            this.saveNumberingFormat(numberingFormat);
+            numberingFormat.setLastAllocatedSerial(0L);
+            return increaseLastAllocatedSerialByOne(usage, format, increaseRequestModel);
         } else {
             Long newSerial = this.getNextValidAllocatedSerial(numberingFormat);
             this.updateLastAllocatedSerial(newSerial, numberingFormat);

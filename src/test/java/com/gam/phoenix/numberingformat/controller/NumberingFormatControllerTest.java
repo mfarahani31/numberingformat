@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,7 +53,8 @@ class NumberingFormatControllerTest {
         doReturn(numberingFormat).when(numberingFormatService).findAllNumberingFormats();
 
         // when + then
-        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL).header("username", "username")
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL)
+                .header("username", "username")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(numberingFormatService, times(1)).findAllNumberingFormats();
@@ -61,8 +63,8 @@ class NumberingFormatControllerTest {
 
 
     @Test
-    @DisplayName("given getNumberFormatByUsageAndFormat when usage and format are valid then returns numberingFormat")
-    public void given_getNumberFormatByUsageAndFormat_when_usage_and_format_are_valid_then_returns_numberingFormats() throws Exception {
+    @DisplayName("given getNumberingFormatByUsageAndFormat when usage and format are valid then returns numberingFormat")
+    public void given_getNumberingFormatByUsageAndFormat_when_usage_and_format_are_valid_then_returns_numberingFormats() throws Exception {
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         // when + then
         this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1")
@@ -74,12 +76,35 @@ class NumberingFormatControllerTest {
     }
 
     @Test
-    @DisplayName("given getNumberFormatByUsageAndFormat when usage and format are invalid then throws exception")
-    public void given_getNumberFormatByUsageAndFormat_when_usage_and_format_are_invalid_then_throws_exception() throws Exception {
+    @DisplayName("given getNumberingFormatByUsageAndFormat when usage and format are invalid then return 500")
+    public void given_getNumberingFormatByUsageAndFormat_when_usage_and_format_are_invalid_then_return_500() throws Exception {
         // given
         doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         // when + then
-        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat").header("username", "username"))
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("given getNumberingFormatByUsageAndFormat when usage is valid format is invalid then return 500")
+    public void given_getNumberingFormatByUsageAndFormat_when_usage_is_valid_and_format_is_invalid_then_return_500() throws Exception {
+        // given
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+        // when + then
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/invalidFormat")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("given getNumberingFormatByUsageAndFormat when usage is inValid format are invalid then return 500")
+    public void given_getNumberingFormatByUsageAndFormat_when_usage_is_inValid_and_format_valid_then_return_500() throws Exception {
+        // given
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+        // when + then
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/test1")
+                .header("username", "username"))
                 .andExpect(status().is5xxServerError());
     }
 
@@ -108,7 +133,20 @@ class NumberingFormatControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result.numberUsage").value(MotherObject.getAnyValidNumberingFormat().getNumberUsage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result.numberFormat").value(MotherObject.getAnyValidNumberingFormat().getNumberFormat()))
                 .andReturn();
+    }
 
+    @Test
+    @DisplayName("given saveNumberFormat when numberingFormat is duplicated then return 500")
+    public void given_saveNumberFormat_when_numberingFormat_is_duplicated_then_return_500() throws Exception {
+        // given
+        doThrow(DataIntegrityViolationException.class).when(numberingFormatService).saveNumberingFormat(any(NumberingFormat.class));
+
+        String inputJson = testMapperUtil.mapToJson(MotherObject.getAnyValidNumberingFormat());
+
+        this.mockMvc.perform(post(NumberingFormatController.NUMBERING_FORMAT_URL)
+                .header("username", "username")
+                .contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson))
+                .andExpect(status().is5xxServerError());
     }
 
     @Test
@@ -128,12 +166,13 @@ class NumberingFormatControllerTest {
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         // when + then
         this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/current").header("username", "username"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.serial").value(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial()));
     }
 
     @Test
-    @DisplayName("given getCurrentSerial when usage and format are invalid then throws exception")
-    public void given_getCurrentSerial_when_usage_and_format_are_invalid_then_throws_exception() throws Exception {
+    @DisplayName("given getCurrentSerial when usage and format are invalid then return 500")
+    public void given_getCurrentSerial_when_usage_and_format_are_invalid_then_return_500() throws Exception {
         // given
         doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         // when + then
@@ -143,14 +182,71 @@ class NumberingFormatControllerTest {
     }
 
     @Test
-    @DisplayName("given getNextSerial when usage and format are valid then returns serial")
-    public void given_getNextSerial_when_usage_and_format_are_valid_then_returns_serial() throws Exception {
+    @DisplayName("given getCurrentSerial when usage is valid format is invalid then return 500")
+    public void given_getCurrentSerial_when_usage_is_valid_format_is_invalid_then_return_500() throws Exception {
+        // given
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+        // when + then
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/invalidFormat/current")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("given getCurrentSerial when usage and format are invalid then return 500")
+    public void given_getCurrentSerial_when_usage_is_invalid_and_format_is_valid_then_return_500() throws Exception {
+        // given
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+        // when + then
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/test1/current")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("given getNextSerial when usage and format are valid then returns next valid serial")
+    public void given_getNextSerial_when_usage_and_format_are_valid_then_returns_next_valid_serial() throws Exception {
         doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
         doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1).when(numberingFormatService).getNextValidAllocatedSerial(any(NumberingFormat.class));
 
         // when + then
-        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/next").header("username", "username"))
-                .andExpect(status().is2xxSuccessful());
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/next")
+                .header("username", "username"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.serial").value(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial() + 1));
+    }
+
+    @Test
+    @DisplayName("given getNextSerial when usage is invalid and format is valid then return 500")
+    public void given_getNextSerial_when_usage_is_inValid_and_format_is_valid_then_return_500() throws Exception {
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+
+        // when + then
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/invalid/next")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("given getNextSerial when usage is invalid and format is valid then return 500")
+    public void given_getNextSerial_when_usage_is_valid_and_format_is_inValid_then_return_500() throws Exception {
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+
+        // when + then
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/test1/next")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("given getNextSerial when usage and format are invalid then return 500")
+    public void given_getNextSerial_when_usage_and_format_are_inValid_then_return_500() throws Exception {
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).findByUsageAndFormat(anyString(), anyString());
+
+        // when + then
+        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/next")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
     }
 
     @Test
@@ -158,16 +254,38 @@ class NumberingFormatControllerTest {
     public void given_deleteNumberFormat_when_usage_and_format_are_valid_then_success() throws Exception {
         doReturn(1L).when(numberingFormatService).deleteNumberingFormat(anyString(), anyString());
         // when + then
-        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1").header("username", "username"))
+        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1")
+                .header("username", "username"))
                 .andExpect(status().is2xxSuccessful());
     }
 
     @Test
-    @DisplayName("given deleteNumberFormat when usage and format are invalid then throws exception")
-    public void given_deleteNumberFormat_when_usage_and_format_are_inValid_then_throws_exception() throws Exception {
+    @DisplayName("given deleteNumberingFormat when usage and format are invalid then return 500")
+    public void given_deleteNumberingFormat_when_usage_and_format_are_inValid_then_throws_exception() throws Exception {
         doThrow(RecordNotFoundException.class).when(numberingFormatService).deleteNumberingFormat(anyString(), anyString());
         // when + then
-        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat").header("username", "username"))
+        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("given deleteNumberingFormat when usage and format are invalid then return 500")
+    public void given_deleteNumberingFormat_when_usage_is_valid_and_format_is_inValid_then_return_500() throws Exception {
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).deleteNumberingFormat(anyString(), anyString());
+        // when + then
+        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/test1")
+                .header("username", "username"))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("given deleteNumberingFormat when usage and format are invalid then return 500")
+    public void given_deleteNumberingFormat_when_usage_is_invalid_and_format_is_valid_then_return_500() throws Exception {
+        doThrow(RecordNotFoundException.class).when(numberingFormatService).deleteNumberingFormat(anyString(), anyString());
+        // when + then
+        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/invalidFormat")
+                .header("username", "username"))
                 .andExpect(status().is5xxServerError());
     }
 
@@ -177,17 +295,19 @@ class NumberingFormatControllerTest {
         doReturn(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial().toString()).when(numberingFormatService).increaseLastAllocatedSerialByOne(anyString(), anyString(), any(IncreaseRequestModel.class));
 
         // when + then
-        this.mockMvc.perform(patch(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/serial/increase").header("username", "username"))
+        this.mockMvc.perform(patch(NumberingFormatController.NUMBERING_FORMAT_URL + "/test1/test1/serial/increase")
+                .header("username", "username"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("given increaseSerial when usage and format are valid then throws exception")
-    public void given_increaseSerial_when_usage_and_format_are_inValid_then_throws_exception() throws Exception {
-        doThrow(DalException.class).when(numberingFormatService).increaseLastAllocatedSerialByOne(anyString(), anyString(), any(IncreaseRequestModel.class));
+    @DisplayName("given increaseSerial when usage and format are valid then save_NumberingFormat_and_return_200")
+    public void given_increaseSerial_when_usage_and_format_are_inValid_then_save_NumberingFormat_and_return_200() throws Exception {
+        doReturn("1").when(numberingFormatService).increaseLastAllocatedSerialByOne(anyString(), anyString(), any(IncreaseRequestModel.class));
 
         // when + then
-        this.mockMvc.perform(patch(NumberingFormatController.NUMBERING_FORMAT_URL + "/invalidUsage/invalidFormat/serial/increase"))
+        this.mockMvc.perform(patch(NumberingFormatController.NUMBERING_FORMAT_URL + "/newUsage/newFormat/serial/increase"))
                 .andExpect(status().is2xxSuccessful());
+        //.andExpect(MockMvcResultMatchers.jsonPath("$.result.serial").value(1));
     }
 }

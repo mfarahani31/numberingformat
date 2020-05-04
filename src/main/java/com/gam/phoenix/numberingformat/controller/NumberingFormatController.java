@@ -51,7 +51,7 @@ public class NumberingFormatController {
     @GetMapping
     @ApiOperation(value = "Return all numberingFormats")
     @ResponseStatus(HttpStatus.OK)
-    public ListRESTResponse<NumberingFormat> getAllNumberingFormats() {
+    public ListRESTResponse<NumberingFormat> getAllNumberingFormats() throws DalException {
         ListRESTResponse<NumberingFormat> numberingFormatListRESTResponse = new ListRESTResponse<>();
         numberingFormatListRESTResponse.setRecords(numberingFormatService.findAllNumberingFormats());
         return numberingFormatListRESTResponse;

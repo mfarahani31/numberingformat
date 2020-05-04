@@ -60,7 +60,7 @@ class NumberingFormatIntervalControllerTest {
         // when + then
         this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals")
                 .header("username", "username")
-                //.param("justApplicableIntervals","false")
+                .param("justApplicableIntervals", "true")
                 //.param("serial","3L")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

@@ -1,6 +1,7 @@
 package com.gam.phoenix.numberingformat.service;
 
 import com.gam.phoenix.numberingformat.MotherObject;
+import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.repository.NumberingFormatIntervalRepository;
@@ -28,7 +29,6 @@ class NumberingFormatServiceTest {
     NumberingFormatService numberingFormatService;
     @Mock
     NumberingFormatRepository numberingFormatRepository;
-
     @Mock
     NumberingFormatIntervalRepository numberingFormatIntervalRepository;
 
@@ -60,7 +60,7 @@ class NumberingFormatServiceTest {
     @Test
     @DisplayName("given findByNumberUsageAndNumberFormat when usage and format are invalid then throws exception")
     public void given_findByNumberUsageAndNumberFormat_when_usage_and_format_are_invalid_then_throws_exception() {
-        doReturn(null).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+        doThrow(RecordNotFoundException.class).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
         assertThrows(DalException.class, () -> numberingFormatService.findByUsageAndFormat(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat()));
     }
 
@@ -73,6 +73,7 @@ class NumberingFormatServiceTest {
 
         assertNotNull(numberingFormatService.saveNumberingFormat(MotherObject.getAnyValidNumberingFormat()));
         assertEquals(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), numberFormat.getNumberUsage());
+        assertEquals(MotherObject.getAnyValidNumberingFormat().getNumberFormat(), numberFormat.getNumberFormat());
     }
 
     @Test
@@ -84,7 +85,7 @@ class NumberingFormatServiceTest {
 
     @Test
     @DisplayName("given findAllNumberingFormats when numberingFormat exist then returns numberingFormats")
-    public void given_findAllNumberingFormats_when_numberingFormat_exist_then_returns_numberingFormat() {
+    public void given_findAllNumberingFormats_when_numberingFormat_exist_then_returns_numberingFormat() throws DalException {
         //given
         List<NumberingFormat> expectedNumberingFormats = Collections.singletonList(MotherObject.getAnyValidNumberingFormat());
         doReturn(expectedNumberingFormats).when(numberingFormatRepository).findAll();
@@ -92,6 +93,13 @@ class NumberingFormatServiceTest {
         List<NumberingFormat> actualNumberingFormats = numberingFormatService.findAllNumberingFormats();
         //then
         assertEquals(expectedNumberingFormats, actualNumberingFormats);
+    }
+
+    @Test
+    @DisplayName("given findAllNumberingFormats when not exist then return 500")
+    public void given_findAllNumberingFormats_when_numberingFormat_is_not_valid_then_return_error() {
+        doThrow(RecordNotFoundException.class).when(numberingFormatRepository).findAll();
+        assertThrows(DalException.class, () -> numberingFormatService.findAllNumberingFormats());
     }
 
     @Test
@@ -117,7 +125,7 @@ class NumberingFormatServiceTest {
         List<NumberingFormatInterval> expectedNumberingFormatIntervals = Collections.singletonList(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
         doReturn(expectedNumberingFormatIntervals).when(numberingFormatIntervalRepository).findAllByNumberingFormatIdAndReservedEndIsGreaterThanSerial(anyLong(), anyLong());
 
-        //doReturn(1).when(numberingFormatRepository).updateLastAllocatedSerial(anyLong(), anyString(), anyString());
+        //doNothing().when(numberingFormatRepository).save(any(NumberingFormat.class));
 
         String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeSerial());
 
@@ -171,16 +179,27 @@ class NumberingFormatServiceTest {
         assertThrows(DalException.class, () -> numberingFormatService.updateLastAllocatedSerial(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial(), MotherObject.getAnyValidNumberingFormat()));
     }
 
-//    @Test
-//    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are invalid then throws exception")
-//    public void given_increaseLastAllocatedSerialByOne_when_usage_and_format_are_new_then_save_in_db_and_return_serial() throws DalException {
-//        doReturn(null).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
-//        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).save(any(NumberingFormat.class));
-//
-//        String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeSerial());
-//
-//        assertEquals(MotherObject.getAnyValidNumberingFormat().getLastAllocatedSerial().toString(), newSerial);
-//    }
+    @Test
+    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are new then save in db and return serial in serial format")
+    public void given_increaseLastAllocatedSerialByOne_when_usage_and_format_are_new_then_save_in_db_and_return_serial() throws DalException {
+        doReturn(null).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).save(any(NumberingFormat.class));
+
+        String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeSerial());
+
+        assertEquals("1", newSerial);
+    }
+
+    @Test
+    @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are new then save in db and return serial in full format")
+    public void given_increaseLastAllocatedSerialByOne_when_usage_and_format_are_new_then_save_in_db_and_return_serial_in_full_format() throws DalException {
+        doReturn(null).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
+        doReturn(MotherObject.getAnyValidNumberingFormat()).when(numberingFormatRepository).save(any(NumberingFormat.class));
+
+        String newSerial = numberingFormatService.increaseLastAllocatedSerialByOne(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat(), MotherObject.getAnyValidIncreaseRequestModelWithReturnTypeFull());
+
+        assertEquals("test1001", newSerial);
+    }
 
     @Test
     @DisplayName("given increaseLastAllocatedSerialByOne when usage and format are invalid then throws exception")

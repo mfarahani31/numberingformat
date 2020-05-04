@@ -1,6 +1,7 @@
 package com.gam.phoenix.numberingformat.service;
 
 import com.gam.phoenix.numberingformat.constants.ExceptionMessage;
+import com.gam.phoenix.numberingformat.exception.RecordNotFoundException;
 import com.gam.phoenix.numberingformat.model.IncreaseRequestModel;
 import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
@@ -42,16 +43,20 @@ public class NumberingFormatService {
     }
 
     public NumberingFormat findByUsageAndFormat(String usage, String format) throws DalException {
-        NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
-        if (numberingFormat == null)
+        try {
+            return this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
+        } catch (RecordNotFoundException e) {
             throw new DalException(ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION, ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION_MSG);
-        else
-            return numberingFormat;
+        }
     }
 
 
-    public List<NumberingFormat> findAllNumberingFormats() {
-        return this.numberingFormatRepository.findAll();
+    public List<NumberingFormat> findAllNumberingFormats() throws DalException {
+        try {
+            return this.numberingFormatRepository.findAll();
+        } catch (RecordNotFoundException e) {
+            throw new DalException(ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION, ExceptionMessage.NUMBERING_FORMAT_NOT_FOUND_EXCEPTION_MSG);
+        }
     }
 
     @Transactional
@@ -66,24 +71,22 @@ public class NumberingFormatService {
     @Transactional
     public String increaseLastAllocatedSerialByOne(String usage, String format, IncreaseRequestModel
             increaseRequestModel) throws DalException {
-
+        Long newSerial;
         NumberingFormat numberingFormat = this.numberingFormatRepository.findByNumberUsageAndNumberFormat(usage, format);
         if (numberingFormat == null) {
             numberingFormat = this.initializeNumberingFormatWithNewValues(usage, format);
             this.saveNumberingFormat(numberingFormat);
-            numberingFormat.setLastAllocatedSerial(0L);
-            return increaseLastAllocatedSerialByOne(usage, format, increaseRequestModel);
+            newSerial = numberingFormat.getLastAllocatedSerial();
         } else {
-            Long newSerial = this.getNextValidAllocatedSerial(numberingFormat);
+            newSerial = this.getNextValidAllocatedSerial(numberingFormat);
             this.updateLastAllocatedSerial(newSerial, numberingFormat);
-
+        }
             increaseRequestModel = initializeIncreaseRequestModel(increaseRequestModel);
             String newSerialWithProperFormat = generateSerialWithRequiredLength(increaseRequestModel.getSerialLength(), newSerial);
             String returnType = increaseRequestModel.getReturnType();
-            assert returnType != null;
-            return specifyResultWithCertainLength(returnType, format, newSerialWithProperFormat, newSerial);
+        return specifyResultWithCertainLength(returnType, format, newSerialWithProperFormat, newSerial);
         }
-    }
+
 
     private String specifyResultWithCertainLength(String returnType, String format, String newSerialWithProperFormat, Long newSerial) {
         String result;

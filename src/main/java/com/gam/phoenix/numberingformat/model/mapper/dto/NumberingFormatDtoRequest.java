@@ -13,11 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NumberingFormatDtoRequest implements RESTResponse {
+
     @ApiModelProperty("Must not start with '/'")
     private String numberUsage;
 
     @ApiModelProperty("Must not start with '/'")
     private String numberFormat;
+
     @ApiModelProperty("Min value is 1")
     private Long startAt;
 }

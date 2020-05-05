@@ -12,6 +12,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
@@ -39,12 +40,14 @@ public class NumberingFormat extends Auditable implements Serializable {
     @Column(name = "NUMBERING_USAGE")
     @Size(max = 50)
     @NotNull
+    @Pattern(regexp = "^(?!/.*$).*", message = "Must not start with '/'")
     private String numberUsage;
 
 
     @Column(name = "NUMBERING_FORMAT")
     @Size(max = 400)
     @NotNull
+    @Pattern(regexp = "^(?!/.*$).*", message = "Must not start with '/'")
     private String numberFormat;
 
     @Column(name = "START_AT", length = 12)

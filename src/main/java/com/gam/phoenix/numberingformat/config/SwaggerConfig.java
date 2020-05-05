@@ -52,7 +52,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .description("Numbering-Format-Service")
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-                .version("0.4.5")
+                .version("0.5.1")
                 .build();
     }
 }

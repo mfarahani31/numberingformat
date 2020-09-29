@@ -32,6 +32,15 @@ class NumberingFormatServiceTest {
     @Mock
     NumberingFormatIntervalRepository numberingFormatIntervalRepository;
 
+    NumberingFormat anyNumberingFormat;
+    NumberingFormat anyValidNumberingFormatStartSerialFrom600;
+    NumberingFormatInterval anyNumberingFormatIntervalBetween300And400;
+    NumberingFormatInterval anyNumberingFormatIntervalBetween1000And1200;
+    IncreaseRequestModel anyValidIncreaseRequestModelWithReturnTypeSerial;
+    IncreaseRequestModel anyValidIncreaseRequestModelWithReturnTypeFull;
+    IncreaseRequestModel anyValidIncreaseRequestModelWithNullValue;
+    IncreaseRequestModel anyValidIncreaseRequestModelWithInvalidValue;
+
 
     @Test
     public void testContext() {

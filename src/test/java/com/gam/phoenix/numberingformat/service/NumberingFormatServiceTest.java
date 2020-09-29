@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class NumberingFormatServiceTest {
 
     @InjectMocks
@@ -61,7 +61,8 @@ class NumberingFormatServiceTest {
     @DisplayName("given findByNumberUsageAndNumberFormat when usage and format are invalid then throws exception")
     public void given_findByNumberUsageAndNumberFormat_when_usage_and_format_are_invalid_then_throws_exception() {
         doThrow(RecordNotFoundException.class).when(numberingFormatRepository).findByNumberUsageAndNumberFormat(anyString(), anyString());
-        assertThrows(DalException.class, () -> numberingFormatService.findByUsageAndFormat(MotherObject.getAnyValidNumberingFormat().getNumberUsage(), MotherObject.getAnyValidNumberingFormat().getNumberFormat()));
+        assertThrows(DalException.class, () -> numberingFormatService.findByUsageAndFormat(anyNumberingFormat.getNumberUsage(),
+                anyNumberingFormat.getNumberFormat()));
     }
 
     @Test

@@ -4,11 +4,13 @@ import com.gam.phoenix.spring.commons.rest.model.response.RESTResponse;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Mohammad Farahani (farahani@gamelectronics.com)
  */
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 @ApiModel(value = "SerialResponse", description = "Represent the Serial with correct Format")
 public class SerialResponse implements RESTResponse {

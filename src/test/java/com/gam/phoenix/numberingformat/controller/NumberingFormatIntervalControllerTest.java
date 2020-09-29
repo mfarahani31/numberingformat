@@ -1,10 +1,12 @@
 package com.gam.phoenix.numberingformat.controller;
 
 import com.gam.phoenix.numberingformat.MotherObject;
+import com.gam.phoenix.numberingformat.model.NumberingFormat;
 import com.gam.phoenix.numberingformat.model.NumberingFormatInterval;
 import com.gam.phoenix.numberingformat.service.NumberingFormatIntervalService;
 import com.gam.phoenix.numberingformat.service.NumberingFormatService;
 import com.gam.phoenix.spring.commons.dal.DalException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -40,11 +42,22 @@ class NumberingFormatIntervalControllerTest {
 
     TestMapperUtil testMapperUtil = new TestMapperUtil();
 
+    String numberingFormatControllerURL;
+    NumberingFormat anyNumberingFormat;
+    NumberingFormatInterval anyNumberingFormatIntervalBetween300And400;
+
     @Autowired
     private MockMvc mockMvc;
 
+    @BeforeEach
+    void setup() {
+        numberingFormatControllerURL = NumberingFormatController.NUMBERING_FORMAT_URL;
+        anyNumberingFormat = MotherObject.getAnyValidNumberingFormat();
+        anyNumberingFormatIntervalBetween300And400 = MotherObject.getAnyValidNumberingFormatIntervalBetween300And400();
+    }
+
     @Test
-    public void contextLoads() {
+    void contextLoads() {
         assertNotNull(numberingFormatService);
         assertNotNull(numberingFormatIntervalService);
         assertNotNull(mockMvc);
@@ -52,13 +65,13 @@ class NumberingFormatIntervalControllerTest {
 
     @Test
     @DisplayName("given getAllReservedIntervalsByNumberingFormatId when numberingFormatId is valid then returns 200")
-    public void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_then_returns_200() throws Exception {
-        List<NumberingFormatInterval> expectedNumberingFormatInterval = Collections.singletonList(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
+    void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_valid_then_returns_200() throws Exception {
+        List<NumberingFormatInterval> expectedNumberingFormatInterval = Collections.singletonList(anyNumberingFormatIntervalBetween300And400);
 
         doReturn(expectedNumberingFormatInterval).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), anyLong());
 
         // when + then
-        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals")
+        this.mockMvc.perform(get(numberingFormatControllerURL + "/id/1/reserved-intervals")
                 .header("username", "username")
                 .param("justApplicableIntervals", "true")
                 //.param("serial","3L")
@@ -69,12 +82,12 @@ class NumberingFormatIntervalControllerTest {
 
     @Test
     @DisplayName("given getAllReservedIntervalsByNumberingFormatId when numberingFormatId is inValid then returns 400")
-    public void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_inValid_then_returns_400() throws Exception {
+    void given_getAllReservedIntervalsByNumberingFormatId_when_numberingFormatId_is_inValid_then_returns_400() throws Exception {
 
         doThrow(DalException.class).when(numberingFormatIntervalService).getAllReservedIntervalsByNumberingFormatId(anyLong(), anyBoolean(), anyLong());
 
         // when + then
-        this.mockMvc.perform(get(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/invalidId/reserved-intervals")
+        this.mockMvc.perform(get(numberingFormatControllerURL + "/id/invalidId/reserved-intervals")
                 .header("username", "username")
                 //.param("justApplicableIntervals","false")
                 //.param("serial","3L")
@@ -84,30 +97,30 @@ class NumberingFormatIntervalControllerTest {
 
     @Test
     @DisplayName("given saveNumberingFormatInterval when numberingFormatId is valid then returns numberingFormatInterval")
-    public void given_saveNumberingFormatInterval_when_numberingFormatId_is_valid_then_returns_numberingFormatInterval() throws Exception {
+    void given_saveNumberingFormatInterval_when_numberingFormatId_is_valid_then_returns_numberingFormatInterval() throws Exception {
         // given
-        doReturn(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400()).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
+        doReturn(anyNumberingFormatIntervalBetween300And400).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
 
-        String inputJson = testMapperUtil.mapToJson(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
+        String inputJson = testMapperUtil.mapToJson(anyNumberingFormatIntervalBetween300And400);
 
-        this.mockMvc.perform(post(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals")
+        this.mockMvc.perform(post(numberingFormatControllerURL + "/id/1/reserved-intervals")
                 .header("username", "username")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result.reservedStart").value(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400().getReservedStart()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result.reservedEnd").value(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400().getReservedEnd()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.reservedStart").value(anyNumberingFormatIntervalBetween300And400.getReservedStart()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.reservedEnd").value(anyNumberingFormatIntervalBetween300And400.getReservedEnd()))
                 .andReturn();
     }
 
     @Test
     @DisplayName("given saveNumberingFormatInterval when numberingFormat is valid then returns numberingFormat")
-    public void given_saveNumberFormat_when_numberingFormatId_is_inValid_then_returns_numberingFormat() throws Exception {
+    void given_saveNumberFormat_when_numberingFormatId_is_inValid_then_returns_numberingFormat() throws Exception {
         // given
         doThrow(DalException.class).when(numberingFormatIntervalService).saveNumberingFormatInterval(anyLong(), any(NumberingFormatInterval.class));
 
-        String inputJson = testMapperUtil.mapToJson(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
+        String inputJson = testMapperUtil.mapToJson(anyNumberingFormatIntervalBetween300And400);
 
-        this.mockMvc.perform(post(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/invalidId/reserved-intervals")
+        this.mockMvc.perform(post(numberingFormatControllerURL + "/id/invalidId/reserved-intervals")
                 .header("username", "username")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson))
                 .andExpect(status().is4xxClientError())
@@ -116,13 +129,13 @@ class NumberingFormatIntervalControllerTest {
 
     @Test
     @DisplayName("given deleteNumberingFormatInterval when numberingFormat is valid then delete numberingFormatInterval")
-    public void given_deleteNumberingFormatInterval_when_numberingFormatId_is_valid_then_delete_numberingFormatInterval() throws Exception {
+    void given_deleteNumberingFormatInterval_when_numberingFormatId_is_valid_then_delete_numberingFormatInterval() throws Exception {
         // given
-        doReturn(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400()).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
+        doReturn(anyNumberingFormatIntervalBetween300And400).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
-        String inputJson = testMapperUtil.mapToJson(MotherObject.getAnyValidNumberingFormatIntervalBetween300And400());
+        String inputJson = testMapperUtil.mapToJson(anyNumberingFormatIntervalBetween300And400);
 
-        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/1")
+        this.mockMvc.perform(delete(numberingFormatControllerURL + "/id/1/reserved-intervals/1")
                 .header("username", "username")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson))
                 .andExpect(status().is2xxSuccessful())
@@ -131,11 +144,11 @@ class NumberingFormatIntervalControllerTest {
 
     @Test
     @DisplayName("given deleteNumberingFormatInterval when numberingFormat is valid then return 404")
-    public void given_deleteNumberingFormatInterval_when_numberingFormatId_is_inValid_then_return_404() throws Exception {
+    void given_deleteNumberingFormatInterval_when_numberingFormatId_is_inValid_then_return_404() throws Exception {
         // given
         doThrow(DalException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
-        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/invalidId/reserved-intervals/nvalidId")
+        this.mockMvc.perform(delete(numberingFormatControllerURL + "/id/invalidId/reserved-intervals/nvalidId")
                 .header("username", "username")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is4xxClientError())
@@ -144,11 +157,11 @@ class NumberingFormatIntervalControllerTest {
 
     @Test
     @DisplayName("given deleteNumberingFormatInterval when numberingFormat is inValid and numberingFormatIntervalId is valid then return 404")
-    public void given_deleteNumberingFormatInterval_when_numberingFormatId_is_inValid_and_numberingFormatIntervalId_is_valid_then_return_404() throws Exception {
+    void given_deleteNumberingFormatInterval_when_numberingFormatId_is_inValid_and_numberingFormatIntervalId_is_valid_then_return_404() throws Exception {
         // given
         doThrow(DalException.class).when(numberingFormatIntervalService).deleteNumberingFormatInterval(anyLong(), anyLong());
 
-        this.mockMvc.perform(delete(NumberingFormatController.NUMBERING_FORMAT_URL + "/id/1/reserved-intervals/invalidId")
+        this.mockMvc.perform(delete(numberingFormatControllerURL + "/id/1/reserved-intervals/invalidId")
                 .header("username", "username")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is4xxClientError())

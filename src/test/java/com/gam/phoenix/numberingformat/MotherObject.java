@@ -74,7 +74,7 @@ public class MotherObject {
         return new NumberingFormatInterval(1L,
                 300L,
                 400L,
-                MotherObject.getAnyValidNumberingFormat());
+                getAnyValidNumberingFormat());
     }
 
     public static Optional<NumberingFormat> getAnyOptionalOfValidNumberingFormat() {
@@ -87,19 +87,10 @@ public class MotherObject {
         return Optional.of(getAnyValidNumberingFormatIntervalBetween300And400());
     }
 
-    public static Long decreaseStartAtByOneForLastAllocatedSerial(Long startAt) {
-        return startAt - 1;
-    }
 
     public static HttpEntity<String> getValidHttpEntityWithHeaderUsernameAdmin() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("username", "admin");
-        return new HttpEntity<>(null, headers);
-    }
-
-    public static HttpEntity<String> getValidHttpEntityWithHeaderUsernameUsername() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("username", "USERNAME");
         return new HttpEntity<>(null, headers);
     }
 
